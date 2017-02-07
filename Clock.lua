@@ -8,14 +8,14 @@ local Clock = {}
 function Clock.new()
   
   local clock = display.newGroup();
-  local dateDisplay = display.newText("Monday January 1", 900,800, "Knockout-HTF29-JuniorLiteweight", 60);
-  local timeDisplay = display.newText("12:00 PM", 900, 980, "Knockout-HTF29-JuniorLiteweight", 160)
+  local dateDisplay = display.newText("Monday January 1", 1820,800, "Knockout-HTF29-JuniorLiteweight", 60);
+  local timeDisplay = display.newText("12:00 PM", 1820, 980, "Knockout-HTF29-JuniorLiteweight", 160)
   timeDisplay:setReferencePoint(display.bottomRightReferencePoint)
-  timeDisplay.x = 800;
-  timeDisplay.y = 650;
+  timeDisplay.x = 1520;
+  timeDisplay.y = 880;
   dateDisplay:setReferencePoint(display.bottomRightReferencePoint)
-  dateDisplay.x = 770;
-  dateDisplay.y = 550;
+  dateDisplay.x = 1490;
+  dateDisplay.y = 780;
   local maxAlpha = 0.75;
 
   
