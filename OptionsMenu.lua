@@ -18,11 +18,17 @@ function OptionsMenu.new()
     backHotZone:setFillColor(255,255,255);
     backHotZone.alpha = 0;
     backHotZone.isHitTestable = true;
+    optionsMenu:insert(backHotZone);
      local function backTouch(self, event)
     if (event.phase == "began") then
 optionsMenu:deactivate();
 --menuHotZone.isHitTestable = true;
 end
+   end
+
+   local function bgTouch(self, event)
+    print("bg touched")
+   return true;
    end
     backHotZone.touch = backTouch;
  backHotZone:addEventListener( "touch",  backHotZone )
@@ -32,7 +38,11 @@ end
   bg.y = display.contentCenterY - 125;
   bg:setFillColor(0,0,0,255)
   bg.alpha = 0.8;
+  bg.isHitTestable = true;
+  bg.touch = bgTouch;
+  bg:addEventListener( "touch",  bg )
   optionsMenu:insert(bg);
+
   optionsMenu.alpha = 0;
   optionsMenu.activated = false;
   optionsMenu.selection = 1;
@@ -53,22 +63,22 @@ local function onToggleTouch(self, event)
 local backPrompt = display.newGroup();
     -- backPrompt.alpha = 1.0;
        
-    local donateIcon = display.newImage("ouyadonate.png", 150,750)
-    local donateText = display.newText("DONATE $0.99",200,750, "Knockout-HTF29-JuniorLiteweight", 40)
+   --  local donateIcon = display.newImage("ouyadonate.png", 150,750)
+   --  local donateText = display.newText("DONATE $0.99",200,750, "Knockout-HTF29-JuniorLiteweight", 40)
 
-    local selectIcon = display.newImage("ouyaselect.png", 150,800)
-    local selectText = display.newText("SELECT",200,800, "Knockout-HTF29-JuniorLiteweight", 40)
+   --  local selectIcon = display.newImage("ouyaselect.png", 150,800)
+   --  local selectText = display.newText("SELECT",200,800, "Knockout-HTF29-JuniorLiteweight", 40)
 
-    local backIcon = display.newImage("ouyaback.png",150,850)
-    local backText = display.newText("BACK", 200, 850, "Knockout-HTF29-JuniorLiteweight", 40)
+   --  local backIcon = display.newImage("ouyaback.png",150,850)
+   --  local backText = display.newText("BACK", 200, 850, "Knockout-HTF29-JuniorLiteweight", 40)
 
-   -- backPrompt:insert(backHotZone)
-    backPrompt:insert(backIcon);
-    backPrompt:insert(backText);
-    backPrompt:insert(selectIcon);
-    backPrompt:insert(selectText)
-    backPrompt:insert(donateIcon);
-    backPrompt:insert(donateText);
+   -- -- backPrompt:insert(backHotZone)
+   --  backPrompt:insert(backIcon);
+   --  backPrompt:insert(backText);
+   --  backPrompt:insert(selectIcon);
+   --  backPrompt:insert(selectText)
+   --  backPrompt:insert(donateIcon);
+   --  backPrompt:insert(donateText);
     -- transition.to(backPrompt,{time=1000, delay=1000, alpha=1.0});
   
  optionsMenu:insert(backPrompt);

@@ -2,7 +2,7 @@
 
 local physics = require "physics"
 local ouya_c = require("OuyaController")
-local ouya = require("plugin.ouya")
+-- local ouya = require("plugin.ouya")
 local OptionsMenu = require("OptionsMenu")
 local Clock = require("Clock")
 
@@ -621,7 +621,7 @@ local function memCheck()
     -- create the menu options
     settingsPrompt = display.newGroup();
     settingsPrompt.alpha = 0;
-    local menuIcon = display.newImage("ouyamenu.png",150,900)
+    local menuIcon = display.newImage("m-key.png",150,900)
     local menuText = display.newText("MENU", 200, 899, "Knockout-HTF29-JuniorLiteweight", 40)
     settingsPrompt:insert(menuIcon);
     settingsPrompt:insert(menuText);
