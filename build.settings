@@ -3,13 +3,41 @@ settings =
        
         orientation =
         {
-                default = "landscapeLeft",
+                default = "landscapeRight",
                 
                 supported =
                 {
                          "landscapeRight", "landscapeLeft"
                 },
         },
+        tvos =
+    {
+        -- Apple TV app icons consist of multiple "layers" in both small and large sizes
+        icon =
+        {
+            -- A collection of 400x240 images, in order from top to bottom
+            small =
+            {
+                "Icon-tvOS-Small-2.png",
+                "Icon-tvOS-Small-1.png",
+            },
+            -- A collection of 1280x768 images, in order from top to bottom
+            large =
+            {
+                "Icon-tvOS-Large-2.png",
+                "Icon-tvOS-Large-1.png",
+            }
+        },
+ 
+        -- A 1920x720 image file, displayed when your app is on the "top shelf"
+        topShelfImage = "Icon-tvOS-TopShelf.png",
+ 
+        -- A 2320x720 image file, displayed when your app is on the "top shelf" of a widescreen TV
+        topShelfImageWide = "Icon-tvOS-TopShelfWide.png",
+ 
+        -- A 1920x1080 image file, displayed briefly as your app loads
+        launchImage = "Icon-tvOS-Launch.png",
+    },
         iphone =
         {
             plist =

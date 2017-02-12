@@ -43,6 +43,7 @@ local w = 1920;
 local h = 1080;
 local debugText;
 
+system.activate( "controllerUserInteraction" )
 --load sprites here
 
 --load sfx here
@@ -123,17 +124,17 @@ local function ouyaListener( event )
   -- debugText.text = event.buttonName .. " " .. event.phase;
   -- buttonStateLabel.text = "Button State: " ..event.phase
   if (optionsMenuScreen.activated) then
-    if event.buttonName == "menu" and event.phase == "pressed" then
+    if event.buttonName == "menu" and event.phase == "down" then
       optionsMenuScreen:deactivate();
       updateLastInteractionTime();
       print("deactivating")
     end
-     if event.buttonName == "back" and event.phase == "pressed" then
+     if event.buttonName == "back" and event.phase == "down" then
       optionsMenuScreen:deactivate();
       updateLastInteractionTime();
       print("deactivating")
     end
-      if (event.buttonName == "a" and event.phase == "pressed") then
+      if (event.buttonName == "a" and event.phase == "down") then
         -- ouyaSDK.asyncLuaOuyaRequestPurchase(onSuccess, onSuccess, onSuccess, "donate_justrain");
         -- plugin_ouya.asyncLuaOuyaRequestPurchase(onSuccess,onFailure,onCancel,"donate_justrain");
     
@@ -141,15 +142,15 @@ local function ouyaListener( event )
         -- ouyaSDK.asyncLuaOuyaRequestPurchase(onSuccess, onFailure, onCancel, "donate_justrain");
         ouyaSDK.asyncLuaOuyaRequestPurchase(onSuccess, onFailure, onCancel, "donate_justrain");
       end
-    if event.buttonName == "up" and event.phase == "pressed" then
+    if event.buttonName == "up" and event.phase == "down" then
       optionsMenuScreen:selectPrev();
       updateLastInteractionTime();
     end
-     if event.buttonName == "down" and event.phase == "pressed" then
+     if event.buttonName == "down" and event.phase == "down" then
       optionsMenuScreen:selectNext();
       updateLastInteractionTime();
     end
-    if event.buttonName == "center" and event.phase == "pressed" then
+    if event.buttonName == "buttonA" and event.phase == "down" then
       optionsMenuScreen:toggleOption();
       updateLastInteractionTime();
     end
@@ -157,43 +158,48 @@ local function ouyaListener( event )
 
 
   else
-    if event.buttonName == "menu" and event.phase == "pressed" then
+    if event.buttonName == "buttonA" and event.phase == "down" then
      
       optionsMenuScreen:activate();
       updateLastInteractionTime();
       print("activating")
     end
+    if event.buttonName == "menu" and event.phase == "down" then
+    system.deactivate( "controllerUserInteraction" ) 
+    
+    end
+    
 
-if event.buttonName == "up" and event.phase == "pressed" then
+if event.buttonName == "up" and event.phase == "down" then
 ouyaYVelocity = -10;
 updateLastInteractionTime();
 end
-if event.buttonName == "up" and event.phase =="released" then
+if event.buttonName == "up" and event.phase =="up" then
 ouyaYVelocity = 0;
 updateLastInteractionTime();
   end
-if event.buttonName == "down" and event.phase == "pressed" then
+if event.buttonName == "down" and event.phase == "down" then
 ouyaYVelocity =  10;
 updateLastInteractionTime();
 end
-if event.buttonName == "down" and event.phase =="released" then
+if event.buttonName == "down" and event.phase =="up" then
 ouyaYVelocity = 0;
 updateLastInteractionTime();
   end
-if event.buttonName == "left" and event.phase == "pressed" then
+if event.buttonName == "left" and event.phase == "down" then
 ouyaXVelocity = -10;
 updateLastInteractionTime();
 end
-if event.buttonName == "left" and event.phase =="released" then
+if event.buttonName == "left" and event.phase =="up" then
 ouyaXVelocity = 0;
 updateLastInteractionTime();
   end
 
-if event.buttonName == "right" and event.phase == "pressed" then
+if event.buttonName == "right" and event.phase == "down" then
 ouyaXVelocity =  10;
 updateLastInteractionTime();
 end
-if event.buttonName == "right" and event.phase =="released" then
+if event.buttonName == "right" and event.phase =="up" then
 ouyaXVelocity = 0;
 updateLastInteractionTime();
   end
@@ -204,9 +210,9 @@ print("ouyavelocity is " .. ouyaXVelocity);
 
   end
   --EXAMPLE:
-  --if event.buttonName == "o" and event.phase == "pressed" then
+  --if event.buttonName == "o" and event.phase == "down" then
   --  player.jump()
-  --elseif event.buttonName == "u" and event.phase == "pressed" then
+  --elseif event.buttonName == "u" and event.phase == "down" then
   --  player.punch()
   --end
 
