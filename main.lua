@@ -25,6 +25,7 @@ local rainDirection = 0;
 local mychannel, mysource;
 local initializeGame  --forward declaration
 
+local menuInUse = false;
 local optionsMenuScreen;
 local settingsPrompt;
 
@@ -70,7 +71,7 @@ local function recalculateRain(locx,locy, anim)
 
 
   --recalculate rainrate
-  rainRate = 30 * percentageOfScreenHeight;
+  rainRate = 20 * percentageOfScreenHeight;
   offsetSpeed = 500 * percentageOfScreenHeight;
   --recalculate rain direction:
   local screenWidthOffset = locx - w/2;
@@ -116,6 +117,37 @@ end
   -- print("changing overlay.y to " .. overlay1.y);
 end 
 
+local function onAxisEvent( event )
+  if (optionsMenuScreen.activated ~= true) then
+    print(event.axis.type)
+    if event.axis.type == "x" then
+      ouyaXVelocity = 10 * event.normalizedValue;
+    end
+
+    if event.axis.type == "y" then
+      ouyaYVelocity = 10 * event.normalizedValue;
+    end
+  else
+    if event.axis.type == "y" then
+
+      if menuInUse and event.normalizedValue ~= 0 then
+        return
+      end
+      menuInUse = false
+      if event.normalizedValue > 0.5 and menuInUse == false then
+        optionsMenuScreen:selectNext();
+        updateLastInteractionTime();
+        menuInUse = true;
+      elseif event.normalizedValue < -0.5 and menuInUse == false then
+        optionsMenuScreen:selectPrev();
+        updateLastInteractionTime();
+        menuInUse = true;
+      else
+      
+      end
+    end
+  end
+end
 
 local function ouyaListener( event )
 
@@ -124,7 +156,8 @@ local function ouyaListener( event )
   -- debugText.text = event.buttonName .. " " .. event.phase;
   -- buttonStateLabel.text = "Button State: " ..event.phase
   if (optionsMenuScreen.activated) then
-    if event.buttonName == "menu" and event.phase == "down" then
+    if event.buttonName == "menu" and event.phase == "pressed" then
+      system.activate( "controllerUserInteraction" )
       optionsMenuScreen:deactivate();
       updateLastInteractionTime();
       print("deactivating")
@@ -150,7 +183,7 @@ local function ouyaListener( event )
       optionsMenuScreen:selectNext();
       updateLastInteractionTime();
     end
-    if event.buttonName == "buttonA" and event.phase == "down" then
+    if event.buttonName == "buttonA" and event.phase == "pressed" then
       optionsMenuScreen:toggleOption();
       updateLastInteractionTime();
     end
@@ -158,14 +191,14 @@ local function ouyaListener( event )
 
 
   else
-    if event.buttonName == "buttonA" and event.phase == "down" then
-     
+    if event.buttonName == "buttonA" and event.phase == "pressed" then
+      system.deactivate( "controllerUserInteraction" )
       optionsMenuScreen:activate();
       updateLastInteractionTime();
       print("activating")
     end
-    if event.buttonName == "menu" and event.phase == "down" then
-    system.deactivate( "controllerUserInteraction" ) 
+    if event.buttonName == "menu" and event.phase == "pressed" then
+    -- apple tv will quit out
     
     end
     
@@ -627,12 +660,41 @@ local function memCheck()
     -- create the menu options
     settingsPrompt = display.newGroup();
     settingsPrompt.alpha = 0;
-    local menuIcon = display.newImage("m-key.png",150,900)
-    local menuText = display.newText("MENU", 200, 899, "Knockout-HTF29-JuniorLiteweight", 40)
-    settingsPrompt:insert(menuIcon);
-    settingsPrompt:insert(menuText);
-    transition.to(settingsPrompt,{time=1000, delay=1000, alpha=1.0});
-    transition.to(settingsPrompt,{time=1000, delay=8000, alpha=0.0});
+    -- local menuIcon = display.newImage("m-key.png",150,900)
+
+    local instructionsText = display.newText("Use the touch surface of your remote to change the intensity and direction of the rain.", display.contentCenterX, 950, "Knockout-HTF29-JuniorLiteweight", 40)
+   -- local menuText = display.newText("Click your remote for more options.", 1080/2, 1920/2, "Knockout-HTF29-JuniorLiteweight", 40)
+    instructionsText:setReferencePoint(display.centerReferencePoint);
+    instructionsText.x = display.contentCenterX
+    -- instructionsText:setAnchor(0.5,0.5)
+    instructionsText:setReferencePoint(display.centerReferencePoint);
+    --menuText:setReferencePoint(display.centerReferencePoint);
+    -- settingsPrompt:insert(menuIcon);
+    settingsPrompt:insert(instructionsText);
+    --settingsPrompt:insert(menuText);
+    transition.to(settingsPrompt,{time=1000, delay=6000, alpha=1.0});
+    transition.to(settingsPrompt,{time=1000, delay=13000, alpha=0.0});
+
+    -- create the menu options
+    settingsPromptTwo = display.newGroup();
+    settingsPromptTwo.alpha = 0;
+    -- local menuIcon = display.newImage("m-key.png",150,900)
+
+    local instructionsTextTwo = display.newText("Click your remote for more options.", display.contentCenterX, 950, "Knockout-HTF29-JuniorLiteweight", 40)
+   -- local menuText = display.newText("Click your remote for more options.", 1080/2, 1920/2, "Knockout-HTF29-JuniorLiteweight", 40)
+    instructionsTextTwo:setReferencePoint(display.centerReferencePoint);
+    instructionsTextTwo.x = display.contentCenterX
+    -- instructionsText:setAnchor(0.5,0.5)
+    instructionsTextTwo:setReferencePoint(display.centerReferencePoint);
+    --menuText:setReferencePoint(display.centerReferencePoint);
+    -- settingsPrompt:insert(menuIcon);
+    settingsPromptTwo:insert(instructionsTextTwo);
+    --settingsPrompt:insert(menuText);
+    transition.to(settingsPromptTwo,{time=1000, delay=15000, alpha=1.0});
+    transition.to(settingsPromptTwo,{time=1000, delay=22000, alpha=0.0});
+    
+
+
     optionsMenuScreen = OptionsMenu.new();
    
 
@@ -678,6 +740,8 @@ runTitleScreen();
 Runtime:addEventListener("enterFrame", memCheck);
 --set the event listener for the controller
 ouya_c:setListener( ouyaListener )
+ 
+Runtime:addEventListener( "axis", onAxisEvent )
   
 -- 
 ----------END ADD GLOBAL LISTENERS

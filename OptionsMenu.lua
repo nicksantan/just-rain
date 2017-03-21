@@ -9,7 +9,7 @@ function OptionsMenu.new()
   
   local optionsMenu = display.newGroup();
   local bg = display.newRect(600,400,1400,400)
-  local minTextAlpha = 1.0; -- was 0.6
+  local minTextAlpha = 0.6; -- was 0.6
   local minToggleBoxAlpha = 0.1;
   local textYStart = 300;
   local textYSpacing = 50;

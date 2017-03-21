@@ -38,7 +38,7 @@ local function ouyaListener( event )
 	if (event.keyName == "buttonY") then
 		e.buttonName = "menu"
 		elseif(event.keyName == "buttonA") then
-			e.buttonName = "center"
+			e.buttonName = "buttonA"
 			elseif(event.keyName == "buttonB") then
 				e.buttonName = "a"
 	elseif (event.keyName == "m") then
