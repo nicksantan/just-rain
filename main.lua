@@ -127,6 +127,10 @@ local function onAxisEvent( event )
     if event.axis.type == "y" then
       ouyaYVelocity = 10 * event.normalizedValue;
     end
+
+    if event.normalizedValue > 0.3 then
+      updateLastInteractionTime();
+    end
   else
     if event.axis.type == "y" then
 
