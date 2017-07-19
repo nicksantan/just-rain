@@ -30,8 +30,8 @@ local optionsMenuScreen;
 local settingsPrompt;
 
 local theClock;
-local wanderDestinationX =  mRand(1920);
-local wanderDestinationY =  mRand(1080)
+local wanderDestinationX =  mRand(800);
+local wanderDestinationY =  mRand(600)
 print (wanderDestinationX);
 print(wanderDestinationY);
 local wanderSpeed = .1;
@@ -40,8 +40,8 @@ local thunderCounter =  mRand(4);
 local lastInteractionTime = os.time();
 local ouyaXVelocity = 0;
 local ouyaYVelocity= 0;
-local w = 1920;
-local h = 1080;
+local w = 800;
+local h = 600;
 local debugText;
 
 system.activate( "controllerUserInteraction" )
@@ -441,8 +441,8 @@ local function manageWanderMode()
 
     if (math.abs(wanderDestinationX - theBox.x) < 2 and math.abs(wanderDestinationY - theBox.y) < 2) then
       --generate a new wanderDestination
-      wanderDestinationX = mRand(1920)
-      wanderDestinationY = mRand(1080)
+      wanderDestinationX = mRand(800)
+      wanderDestinationY = mRand(600)
       print ("wander destination X is now " .. wanderDestinationX);
       print ("wander destination X is now " .. wanderDestinationY);
     end
@@ -517,7 +517,7 @@ for i = 1, rainRate do
     drop.endValue = mRand(h-180,h-20);
     drop.alpha = 0.8;
     sourcePan = rainDirection / 2.5;
-    drop.x = mRand(-320,w+300) - sourcePan;
+    drop.x = mRand(-120,w+100) - sourcePan;
     drop.y = 0;
     
     drop.collision = onLocalCollision
@@ -609,7 +609,7 @@ local function memCheck()
     theBG:setFillColor(51,0,102, 255);
     theBG.alpha = 60/255
 
-    BG = display.newImageRect("home.png",1920,1080);
+    BG = display.newImageRect("home.png",800,600);
     BG:setReferencePoint(display.TopCenterReferencePoint)
     BG.y = 0;
     BG.x = w/2;
@@ -667,7 +667,7 @@ local function memCheck()
     -- local menuIcon = display.newImage("m-key.png",150,900)
 
     local instructionsText = display.newText("Use the touch surface of your remote to change the intensity and direction of the rain.", display.contentCenterX, 950, "Knockout-HTF29-JuniorLiteweight", 40)
-   -- local menuText = display.newText("Click your remote for more options.", 1080/2, 1920/2, "Knockout-HTF29-JuniorLiteweight", 40)
+   -- local menuText = display.newText("Click your remote for more options.", 600/2, 800/2, "Knockout-HTF29-JuniorLiteweight", 40)
     instructionsText:setReferencePoint(display.centerReferencePoint);
     instructionsText.x = display.contentCenterX
     -- instructionsText:setAnchor(0.5,0.5)
@@ -685,7 +685,7 @@ local function memCheck()
     -- local menuIcon = display.newImage("m-key.png",150,900)
 
     local instructionsTextTwo = display.newText("Click your remote for more options.", display.contentCenterX, 950, "Knockout-HTF29-JuniorLiteweight", 40)
-   -- local menuText = display.newText("Click your remote for more options.", 1080/2, 1920/2, "Knockout-HTF29-JuniorLiteweight", 40)
+   -- local menuText = display.newText("Click your remote for more options.", 600/2, 800/2, "Knockout-HTF29-JuniorLiteweight", 40)
     instructionsTextTwo:setReferencePoint(display.centerReferencePoint);
     instructionsTextTwo.x = display.contentCenterX
     -- instructionsText:setAnchor(0.5,0.5)
@@ -702,7 +702,7 @@ local function memCheck()
     optionsMenuScreen = OptionsMenu.new();
    
 
-    dimBg = display.newRect(0,0,1920,1080)
+    dimBg = display.newRect(0,0,800,600)
     dimBg:setFillColor(0,0,0);
     dimBg.alpha = 0;
 

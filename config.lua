@@ -3,8 +3,8 @@ application =
         content =
         {
         		graphicsCompatibility = 1,
-                width = 1080,
-                height = 1920,
+                width = 600,
+                height = 800,
                	scale = "zoomStretch",
                	fps = 60
               
