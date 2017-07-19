@@ -159,6 +159,7 @@ local function ouyaListener( event )
   -- buttonNameLabel.text = "Button Name: " ..event.buttonName
   -- debugText.text = event.buttonName .. " " .. event.phase;
   -- buttonStateLabel.text = "Button State: " ..event.phase
+  print(event.buttonName )
   if (optionsMenuScreen.activated) then
     if event.buttonName == "menu" and event.phase == "pressed" then
       system.activate( "controllerUserInteraction" )
@@ -195,7 +196,7 @@ local function ouyaListener( event )
 
 
   else
-    if event.buttonName == "buttonA" and event.phase == "pressed" then
+    if event.buttonName == "menu" and event.phase == "pressed" then
       system.deactivate( "controllerUserInteraction" )
       optionsMenuScreen:activate();
       updateLastInteractionTime();
@@ -207,36 +208,36 @@ local function ouyaListener( event )
     end
     
 
-if event.buttonName == "up" and event.phase == "down" then
+if event.buttonName == "w" and event.phase == "pressed" then
 ouyaYVelocity = -10;
 updateLastInteractionTime();
 end
-if event.buttonName == "up" and event.phase =="up" then
+if event.buttonName == "w" and event.phase =="released" then
 ouyaYVelocity = 0;
 updateLastInteractionTime();
   end
-if event.buttonName == "down" and event.phase == "down" then
+if event.buttonName == "f" and event.phase == "pressed" then
 ouyaYVelocity =  10;
 updateLastInteractionTime();
 end
-if event.buttonName == "down" and event.phase =="up" then
+if event.buttonName == "f" and event.phase =="released" then
 ouyaYVelocity = 0;
 updateLastInteractionTime();
   end
-if event.buttonName == "left" and event.phase == "down" then
+if event.buttonName == "a" and event.phase == "pressed" then
 ouyaXVelocity = -10;
 updateLastInteractionTime();
 end
-if event.buttonName == "left" and event.phase =="up" then
+if event.buttonName == "a" and event.phase =="released" then
 ouyaXVelocity = 0;
 updateLastInteractionTime();
   end
 
-if event.buttonName == "right" and event.phase == "down" then
+if event.buttonName == "d" and event.phase == "pressed" then
 ouyaXVelocity =  10;
 updateLastInteractionTime();
 end
-if event.buttonName == "right" and event.phase =="up" then
+if event.buttonName == "d" and event.phase =="released" then
 ouyaXVelocity = 0;
 updateLastInteractionTime();
   end

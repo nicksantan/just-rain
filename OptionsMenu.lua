@@ -8,12 +8,12 @@ local OptionsMenu = {}
 function OptionsMenu.new()
   
   local optionsMenu = display.newGroup();
-  local bg = display.newRect(600,400,1400,400)
+  local bg = display.newRect(0,0,600,800)
   local minTextAlpha = 0.6; -- was 0.6
   local minToggleBoxAlpha = 0.1;
-  local textYStart = 300;
+  local textYStart = 0;
   local textYSpacing = 50;
-  local textXStart = 400;
+  local textXStart = 0;
   local backHotZone = display.newRect(display.screenOriginX, display.screenOriginY, display.contentWidth, display.contentHeight);
     backHotZone:setFillColor(255,255,255);
     backHotZone.alpha = 0;
@@ -64,13 +64,13 @@ local backPrompt = display.newGroup();
     -- backPrompt.alpha = 1.0;
        
    --  local donateIcon = display.newImage("ouyadonate.png", 150,750)
-   --  local donateText = display.newText("DONATE $0.99",200,750, "Knockout-HTF29-JuniorLiteweight", 40)
+   --  local donateText = display.newText("DONATE $0.99",200,750, "Knockout-HTF29-JuniorLiteweight", 20)
 
    --  local selectIcon = display.newImage("ouyaselect.png", 150,800)
-   --  local selectText = display.newText("SELECT",200,800, "Knockout-HTF29-JuniorLiteweight", 40)
+   --  local selectText = display.newText("SELECT",200,800, "Knockout-HTF29-JuniorLiteweight", 20)
 
    --  local backIcon = display.newImage("ouyaback.png",150,850)
-   --  local backText = display.newText("BACK", 200, 850, "Knockout-HTF29-JuniorLiteweight", 40)
+   --  local backText = display.newText("BACK", 200, 850, "Knockout-HTF29-JuniorLiteweight", 20)
 
    -- -- backPrompt:insert(backHotZone)
    --  backPrompt:insert(backIcon);
@@ -82,14 +82,14 @@ local backPrompt = display.newGroup();
     -- transition.to(backPrompt,{time=1000, delay=1000, alpha=1.0});
   
  optionsMenu:insert(backPrompt);
-  local optionClockText = display.newText("Clock", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
+  local optionClockText = display.newText("Clock", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 20)
   optionClockText:setReferencePoint(display.TopLeftReferencePoint);
   optionClockText.alpha = 1.0;
   optionClockText.x = textXStart;
   optionClockText.y = textYStart;
 
 
-  local optionClockToggleBox = display.newRect(1510,650,30,30);
+  local optionClockToggleBox = display.newRect(600,650,30,30);
   optionClockToggleBox:setReferencePoint(display.TopLeftReferencePoint);
   optionClockToggleBox.alpha = minToggleBoxAlpha;
   optionClockToggleBox.y = textYStart + 20;
@@ -98,13 +98,13 @@ local backPrompt = display.newGroup();
   optionClockToggleBox.touch = onToggleTouch
   optionClockToggleBox:addEventListener( "touch", optionClockToggleBox )
 
-   local optionWanderText =  display.newText("Wander Mode (rain changes direction and intensity over time)", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
+   local optionWanderText =  display.newText("Wander Mode (rain changes direction and intensity over time)", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 20)
   optionWanderText:setReferencePoint(display.TopLeftReferencePoint);
   optionWanderText.alpha = minTextAlpha;
     optionWanderText.x = textXStart;
   optionWanderText.y = textYStart + textYSpacing
 
-    local optionTwoToggleBox = display.newRect(1510,670,30,30);
+    local optionTwoToggleBox = display.newRect(600,670,30,30);
   optionTwoToggleBox:setReferencePoint(display.TopLeftReferencePoint);
   optionTwoToggleBox.alpha = minToggleBoxAlpha;
   optionTwoToggleBox.y = textYStart + 20 + textYSpacing;
@@ -112,13 +112,13 @@ local backPrompt = display.newGroup();
    optionTwoToggleBox.touch = onToggleTouch
 optionTwoToggleBox:addEventListener( "touch", optionTwoToggleBox )
 
-   local optionAutoDimText = display.newText("Auto-dim after 5 minutes of inactivity", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
+   local optionAutoDimText = display.newText("Auto-dim after 5 minutes of inactivity", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 20)
   optionAutoDimText:setReferencePoint(display.TopLeftReferencePoint);
   optionAutoDimText.alpha = minTextAlpha;
   optionAutoDimText.x = textXStart;
   optionAutoDimText.y = textYStart + textYSpacing * 2;
 
-    local optionThreeToggleBox = display.newRect(1510,690,30,30);
+    local optionThreeToggleBox = display.newRect(600,690,30,30);
   optionThreeToggleBox:setReferencePoint(display.TopLeftReferencePoint);
   optionThreeToggleBox.alpha = minToggleBoxAlpha;
    optionThreeToggleBox.y = textYStart + 20 + textYSpacing * 2;
@@ -126,13 +126,13 @@ optionTwoToggleBox:addEventListener( "touch", optionTwoToggleBox )
     optionThreeToggleBox.touch = onToggleTouch
 optionThreeToggleBox:addEventListener( "touch", optionThreeToggleBox )
 
-   local optionExtraThunderText = display.newText("Extra Thunder", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
+   local optionExtraThunderText = display.newText("Extra Thunder", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 20)
   optionExtraThunderText:setReferencePoint(display.TopLeftReferencePoint);
   optionExtraThunderText.alpha = minTextAlpha;
    optionExtraThunderText.x = textXStart;
   optionExtraThunderText.y = textYStart + textYSpacing * 3;
 
-    local optionFourToggleBox = display.newRect(1510,710,30,30);
+    local optionFourToggleBox = display.newRect(600,710,30,30);
   optionFourToggleBox:setReferencePoint(display.TopLeftReferencePoint);
   optionFourToggleBox.alpha = minToggleBoxAlpha;
   optionFourToggleBox.y = textYStart + 20 + textYSpacing * 3;
@@ -151,7 +151,7 @@ optionFourToggleBox:addEventListener( "touch", optionFourToggleBox )
   
   optionsMenu.options = {
   {text = optionClockText, toggle = "off", toggleBox = optionClockToggleBox},
-  {text = optionWanderText, toggle = "off", toggleBox = optionTwoToggleBox},
+  {text = optionWanderText, toggle = "on", toggleBox = optionTwoToggleBox},
   {text = optionAutoDimText, toggle = "off", toggleBox = optionThreeToggleBox},
   {text = optionExtraThunderText, toggle = "off", toggleBox = optionFourToggleBox},
 
