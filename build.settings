@@ -30,10 +30,10 @@ settings =
         },
  
         -- A 1920x720 image file, displayed when your app is on the "top shelf"
-        topShelfImage = "Icon-tvOS-TopShelf.png",
+        topShelfImage = "Icon-tvOS-TopShelf.jpg",
  
         -- A 2320x720 image file, displayed when your app is on the "top shelf" of a widescreen TV
-        topShelfImageWide = "Icon-tvOS-TopShelfWide.png",
+        topShelfImageWide = "Icon-tvOS-TopShelfWide.jpg",
  
         -- A 1920x1080 image file, displayed briefly as your app loads
         launchImage = "Icon-tvOS-Launch.png",
