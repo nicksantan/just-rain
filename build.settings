@@ -1,6 +1,6 @@
 settings =
 {
-       
+      
         orientation =
         {
                 default = "landscapeLeft",
@@ -39,10 +39,16 @@ settings =
         },
         android =
         {  
-        
-           
+        usesPermissions =
+        {
+            "com.android.vending.BILLING",
         },
-         window = {
-            defaultMode = "fullscreen",
-        },
+            mainIntentFilter =
+            {
+                categories =
+                {
+                "tv.ouya.intent.category.APP"
+                },
+            },
+        }
 }

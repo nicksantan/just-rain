@@ -1,10 +1,11 @@
 ---------- Declare libraries and globals ----------
 
 local physics = require "physics"
-local ouya_c = require("OuyaController")
+-- local ouya_c = require("OuyaController")
 -- local ouya = require("plugin.ouya")
 local OptionsMenu = require("OptionsMenu")
 local Clock = require("Clock")
+--local store = require("store")
 
 
 display.setStatusBar( display.HiddenStatusBar )
@@ -24,13 +25,13 @@ local offsetSpeed;
 local rainDirection = 0;
 local mychannel, mysource;
 local initializeGame  --forward declaration
-
+local extendedPurchased = false; 
 local optionsMenuScreen;
 local settingsPrompt;
 
 local theClock;
-local wanderDestinationX =  mRand(1920);
-local wanderDestinationY =  mRand(1080)
+local wanderDestinationX =  mRand(1024);
+local wanderDestinationY =  mRand(768)
 print (wanderDestinationX);
 print(wanderDestinationY);
 local wanderSpeed = .1;
@@ -39,8 +40,8 @@ local thunderCounter =  mRand(4);
 local lastInteractionTime = os.time();
 local ouyaXVelocity = 0;
 local ouyaYVelocity= 0;
-local w = 1920;
-local h = 1080;
+local w = 1024;
+local h = 768;
 local debugText;
 
 --load sprites here
@@ -58,7 +59,69 @@ local drops = {};
 ---------- END Declare libraries and globals ----------
 
 
----------- INIT GAM`E FUNCTION. (Run every time game is launched and reset) ----------
+---------- INIT GAME FUNCTION. (Run every time game is launched and reset) ----------
+
+-- --  Check for in app purchases
+-- function transactionCallback( event )
+ 
+--     -- Log transaction info.
+--     print("transactionCallback: Received event " .. tostring(event.name))
+--     print("state: " .. tostring(event.transaction.state))
+--     print("errorType: " .. tostring(event.transaction.errorType))
+--     print("errorString: " .. tostring(event.transaction.errorString))
+ 
+--     local productID= event.transaction.productIdentifier;
+--     if event.transaction.state == "purchased" then
+--         print("Product Purchased: ", productID)
+        
+--     elseif  event.transaction.state == "restored" then
+--         print("Product Restored", productID)
+--         extendedPurchased = true;
+ 
+--     elseif  event.transaction.state == "refunded" then
+--         print("Product Refunded")
+ 
+--     elseif event.transaction.state == "cancelled" then
+--         print("Transaction cancelled")
+ 
+--     elseif event.transaction.state == "failed" then        
+--         print("Transaction Failed")
+        
+--     else
+--         print("Some unknown event occured.  This should never happen.")
+--     end
+ 
+--     -- Tell the store we are done with the transaction.
+--     -- If you are providing downloadable content, do not call this until
+--     -- the download has completed.
+--     store.finishTransaction( event.transaction )
+-- end
+
+-- if store.availableStores.apple then
+--     store.init("apple", transactionCallback)
+--     print("Using Apple's in-app purchase system.")
+    
+-- elseif store.availableStores.google then
+--     store.init("google", transactionCallback)
+--     print("Using Google's Android In-App Billing system.")
+    
+-- else
+
+-- end
+
+--  function purchaseItem(event)
+--     --make sure you add { } around your product id as you need to send a table value... not a string!
+--     store.purchase( {"extended"})
+    
+-- end
+ 
+--  function restorePurchases(event)
+--     --no need to sepcify a product
+--     store.restore()
+    
+-- end
+
+-- restorePurchases();
 local function recalculateRain(locx,locy, anim)
  --recalculate alpha of bg
      local percentageOfScreenHeight = math.abs(locy / h);
@@ -86,22 +149,32 @@ al.Source(mysource6, al.POSITION,  rainDirectionFraction, 0.0, math.abs(rainDire
 al.Source(mysource7, al.POSITION,  rainDirectionFraction, 0.0, math.abs(rainDirectionFraction))
 al.Source(mysource8, al.POSITION,  rainDirectionFraction, 0.0, math.abs(rainDirectionFraction))
   --recalculate each track's volume
-  local tierOnePercentage = ((locy)/(h/3))/2
-  audio.setVolume(tierOnePercentage, { channel=1})
-  local tierTwoPercentage = (locy - h/3) / (h/3);
-  audio.setVolume( tierTwoPercentage, { channel=2 } )
 
- local tierThreePercentage = (locy - (h*2/3)) / (h/4);
-  audio.setVolume( tierThreePercentage, { channel=3 } )
+  local muteOn = optionsMenuScreen.options[1].toggle
+  if (muteOn == "off") then
+    local tierOnePercentage = ((locy)/(h/3))/2
+    audio.setVolume(tierOnePercentage, { channel=1})
+    local tierTwoPercentage = (locy - h/3) / (h/3);
+    audio.setVolume( tierTwoPercentage, { channel=2 } )
 
-  local tierFourPercentage = (locy - (h*4/5)) / (h/5);
-  audio.setVolume( tierFourPercentage, { channel=4 } )
--- print ("tier four volume set to " .. tierFourPercentage)
-  local thunderPercentage = (locy / h) * 2
-   audio.setVolume( thunderPercentage, { channel=5 } )
-    audio.setVolume( thunderPercentage, { channel=6 } )
-     audio.setVolume( thunderPercentage, { channel=7 } )
-     audio.setVolume( thunderPercentage, { channel=8 } )
+   local tierThreePercentage = (locy - (h*2/3)) / (h/4);
+    audio.setVolume( tierThreePercentage, { channel=3 } )
+
+    local tierFourPercentage = (locy - (h*4/5)) / (h/5);
+    audio.setVolume( tierFourPercentage, { channel=4 } )
+  -- print ("tier four volume set to " .. tierFourPercentage)
+    local thunderPercentage = (locy / h) * 2
+     audio.setVolume( thunderPercentage, { channel=5 } )
+      audio.setVolume( thunderPercentage, { channel=6 } )
+       audio.setVolume( thunderPercentage, { channel=7 } )
+       audio.setVolume( thunderPercentage, { channel=8 } )
+
+   else
+      for i=1, 8 do
+
+       audio.setVolume( 0, { channel=i } )
+     end
+   end
   --recalculate the overlay
   if (anim == 1) then
   transition.to(overlay1, {y=-percentageOfScreenHeight*(2220-h), time=100});
@@ -136,10 +209,8 @@ local function ouyaListener( event )
       if (event.buttonName == "a" and event.phase == "pressed") then
         -- ouyaSDK.asyncLuaOuyaRequestPurchase(onSuccess, onSuccess, onSuccess, "donate_justrain");
         -- plugin_ouya.asyncLuaOuyaRequestPurchase(onSuccess,onFailure,onCancel,"donate_justrain");
-    
         -- plugin_ouya.asyncLuaOuyaRequestPurchase(onSuccess, onFailure, onCancel, "donate_justrain");
         -- ouyaSDK.asyncLuaOuyaRequestPurchase(onSuccess, onFailure, onCancel, "donate_justrain");
-        ouyaSDK.asyncLuaOuyaRequestPurchase(onSuccess, onFailure, onCancel, "donate_justrain");
       end
     if event.buttonName == "up" and event.phase == "pressed" then
       optionsMenuScreen:selectPrev();
@@ -182,7 +253,7 @@ updateLastInteractionTime();
   end
 if event.buttonName == "left" and event.phase == "pressed" then
 ouyaXVelocity = -10;
-updateLastInteractionTime();
+updateLastInteractionTime(); 
 end
 if event.buttonName == "left" and event.phase =="released" then
 ouyaXVelocity = 0;
@@ -215,38 +286,45 @@ end
 
 function manageTouch(event)
 
-  if (event.phase == "began") then
-    -- print("touch began");
-    updateLastInteractionTime();
-    physics.addBody(theBox, {density = 1, friction = .3, bounce = .01, isSensor=true});
-    theBox.bodyType = "static"
-    theBox.x = event.x;
-    theBox.y = event.y;
-    recalculateRain(theBox.x, theBox.y, 1)
-  
-end
+  if (optionsMenuScreen.activated ~= true) then
+    -- if (event.x < display.screenOriginX + 300 and event.y > display.actualContentHeight - 300) then
+    --   optionsMenuScreen:activate();
+    -- else
 
-if (event.phase == "moved") then
-  updateLastInteractionTime();
-  -- make sure that the overlay doesn't slide past the end of the screen
-if (event.y < h) then
-  if (event.y>0) then
-  -- print("thing onscreen");
- -- print(event.x);
- theBox.x = event.x;
- theBox.y = event.y;
-recalculateRain(theBox.x, theBox.y, 0)
-  end
-end
-end
-if (event.phase == "ended") then
-updateLastInteractionTime();
--- print("touch ended");
-theBox.x = event.x;
-theBox.y = event.y;
-transition.to(theBox, {time=500, alpha = 0.0} )
-recalculateRain(theBox.x, theBox.y, 0)
-physics.removeBody( theBox );
+          if (event.phase == "began") then
+            -- print("touch began");
+            updateLastInteractionTime();
+            physics.addBody(theBox, {density = 1, friction = .3, bounce = .01, isSensor=true});
+            theBox.bodyType = "static"
+            theBox.x = event.x;
+            theBox.y = event.y;
+            recalculateRain(theBox.x, theBox.y, 1)
+          
+        end
+
+        if (event.phase == "moved") then
+          updateLastInteractionTime();
+          -- make sure that the overlay doesn't slide past the end of the screen
+        if (event.y < h) then
+          if (event.y>0) then
+          -- print("thing onscreen");
+         -- print(event.x);
+         theBox.x = event.x;
+         theBox.y = event.y;
+        recalculateRain(theBox.x, theBox.y, 0)
+          end
+        end
+        end
+        if (event.phase == "ended") then
+        updateLastInteractionTime();
+        -- print("touch ended");
+        theBox.x = event.x;
+        theBox.y = event.y;
+        transition.to(theBox, {time=500, alpha = 0.0} )
+        recalculateRain(theBox.x, theBox.y, 0)
+        physics.removeBody( theBox );
+        end
+      -- end
 end
 
 if (rainRate < 1) then
@@ -268,23 +346,21 @@ onCancel = function()
 debugText.text = "something happened at least cancel"
   end
 
-function requestPurchase()
+local function runTitleScreen()
+local function requestPurchase()
  
 debugText.text="requesting products..."
  -- plugin_ouya.asyncLuaOuyaRequestPurchase(onSuccess, onSuccess, onSuccess, "donate_justrain");
  products = {"donate_justrain"};
  -- plugin_ouya.asyncLuaOuyaRequestProducts(onSuccess, onFailure, onCancel, products);
- ouyaSDK.asyncLuaOuyaRequestPurchase(onSuccess, onFailure, onCancel, "donate_justrain");
+ -- ouyaSDK.asyncLuaOuyaRequestPurchase(onSuccess, onFailure, onCancel, "donate_justrain");
  debugText.text="bueler?"
 end
-
-local function runTitleScreen()
-
   local function registerOuyaID()
     -- plugin_ouya.developerId = "7750f484-f49d-4a4d-8e37-5ef3efbf5eba";
-  --ouyaSDK.ouyaSetDeveloperId("7750f484-f49d-4a4d-8e37-5ef3efbf5eba")
+  -- ouyaSDK.ouyaSetDeveloperId("7750f484-f49d-4a4d-8e37-5ef3efbf5eba")
     
-     -- timer.performWithDelay(10000,requestPurchase)
+     timer.performWithDelay(10000,requestPurchase)
    
   end
    
@@ -326,7 +402,7 @@ local function runTitleScreen()
 
 local function manageClock()
   -- print("manage clock being run")
-  theClock:update(optionsMenuScreen.options[1].toggle)
+  theClock:update(optionsMenuScreen.options[2].toggle)
 end
 
 function updateLastInteractionTime()
@@ -337,7 +413,7 @@ local function manageAutoDim()
   local timeSinceLastInteraction = os.time() - lastInteractionTime;
   -- print(timeSinceLastInteraction)
 
-  if (optionsMenuScreen.options[3].toggle == "on") then
+  if (optionsMenuScreen.options[4].toggle == "on") then
     if (timeSinceLastInteraction > (60*5)) then
 
       dimBg.alpha = 0.8;
@@ -350,7 +426,7 @@ end
 
 local function manageExtraThunder()
 
-  if (optionsMenuScreen.options[4].toggle == "on") then
+  if (optionsMenuScreen.options[5].toggle == "on") then
   print (thunderFrameCount)
   thunderFrameCount = thunderFrameCount + 1;
 if (thunderFrameCount % 300 == 0) then
@@ -376,7 +452,7 @@ end
 end
 local function manageWanderMode()
 
-  if (optionsMenuScreen.options[2].toggle == "on") then
+  if (optionsMenuScreen.options[3].toggle == "on") then
     print ("the boxx and y are " .. theBox.x)
     print (theBox.y)
     print ('wanderdestX is ' .. wanderDestinationX)
@@ -398,8 +474,8 @@ local function manageWanderMode()
 
     if (math.abs(wanderDestinationX - theBox.x) < 2 and math.abs(wanderDestinationY - theBox.y) < 2) then
       --generate a new wanderDestination
-      wanderDestinationX = mRand(1920)
-      wanderDestinationY = mRand(1080)
+      wanderDestinationX = mRand(w)
+      wanderDestinationY = mRand(h)
       print ("wander destination X is now " .. wanderDestinationX);
       print ("wander destination X is now " .. wanderDestinationY);
     end
@@ -569,31 +645,51 @@ local function memCheck()
     BG = display.newImageRect("home.png",1920,1080);
     BG:setReferencePoint(display.TopCenterReferencePoint)
     BG.y = 0;
-    BG.x = w/2;
-    BG.width = w; 
-    BG.height = h
+    BG.x = display.contentWidth/2;
+    BG.width = display.actualContentWidth;
+    BG.height = 1200;
 
     overlay1 = display.newImage("overlay1c.png",true);
 
     overlay1:setReferencePoint(display.TopCenterReferencePoint)
-    overlay1.x = w/2;
+    overlay1.x = display.contentWidth/2;
     overlay1.y=0;
-    overlay1.width = w;
+    overlay1.width = display.actualContentWidth;
    
     overlay2 = display.newImage("overlay2c.png",true);
 
     overlay2:setReferencePoint(display.TopCenterReferencePoint)
-    overlay2.x = w/2;
+    overlay2.x = display.contentWidth/2;
     overlay2.y=overlay1.height;
-    overlay2.width = w;
+    overlay2.width = display.actualContentWidth;
      -- overlay2.alpha = 0;
 
     overlay3 = display.newImage("overlay3c.png",true);
     overlay3:setReferencePoint(display.TopCenterReferencePoint)
-    overlay3.x = w/2;
+    overlay3.x = display.contentWidth/2;
     overlay3.y=overlay1.height;
-    overlay3.width = w;
+    overlay3.width = display.actualContentWidth/2;
      -- overlay3.alpha = 0;
+
+       -- backPrompt.alpha = 1.0;
+     menuHotZone = display.newRect(display.screenOriginX, display.contentHeight - 200, 300, 200);
+    menuHotZone:setFillColor(255,255,255);
+    menuHotZone.alpha = 0.0;
+    menuHotZone.isHitTestable = false; --CHANGE
+
+  
+
+   
+   local function menuTouch(self, event)
+    if (event.phase == "began") then
+    if (optionsMenuScreen.activated ~= true) then
+      menuHotZone.isHitTestable = false;
+optionsMenuScreen:activate();
+   end
+ end
+ end
+      menuHotZone.touch = menuTouch;
+ menuHotZone:addEventListener( "touch",  menuHotZone )
 
     --create the box
 
@@ -621,18 +717,20 @@ local function memCheck()
     -- create the menu options
     settingsPrompt = display.newGroup();
     settingsPrompt.alpha = 0;
-    local menuIcon = display.newImage("m-key.png",150,900)
-    local menuText = display.newText("MENU", 200, 899, "Knockout-HTF29-JuniorLiteweight", 40)
+    local menuIcon = display.newImage("amazonmenu.png",display.screenOriginX + 50,650)
+    local menuText = display.newText("Tap this corner to access menu", display.screenOriginX + 100, 649, "Knockout-HTF29-JuniorLiteweight", 40)
     settingsPrompt:insert(menuIcon);
     settingsPrompt:insert(menuText);
-    transition.to(settingsPrompt,{time=1000, delay=1000, alpha=1.0});
-    transition.to(settingsPrompt,{time=1000, delay=8000, alpha=0.0});
+    -- transition.to(settingsPrompt,{time=1000, delay=1000, alpha=1.0});
+    -- transition.to(settingsPrompt,{time=1000, delay=8000, alpha=0.0});
     optionsMenuScreen = OptionsMenu.new();
    
 
-    dimBg = display.newRect(0,0,1920,1080)
+    dimBg = display.newRect(0,0,2920,1080)
     dimBg:setFillColor(0,0,0);
     dimBg.alpha = 0;
+    dimBg.x = display.screenOriginX;
+
 
     debugText = display.newText("hi", 300, 50, "Knockout-HTF29-JuniorLiteweight", 40) -- HTF29-JuniorLiteweight
     debugText.alpha = 0;
@@ -671,7 +769,7 @@ runTitleScreen();
 
 Runtime:addEventListener("enterFrame", memCheck);
 --set the event listener for the controller
-ouya_c:setListener( ouyaListener )
+-- ouya_c:setListener( ouyaListener )
   
 -- 
 ----------END ADD GLOBAL LISTENERS
