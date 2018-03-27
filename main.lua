@@ -1,12 +1,13 @@
 ---------- Declare libraries and globals ----------
-
+extendedPurchased = true; 
+timeSleepTimerSet = os.time();
 local physics = require "physics"
 -- local ouya_c = require("OuyaController")
 -- local ouya = require("plugin.ouya")
 local OptionsMenu = require("OptionsMenu")
 local Clock = require("Clock")
 --local store = require("store")
-
+local store = require( "plugin.google.iap.v3" )
 
 display.setStatusBar( display.HiddenStatusBar )
 mRand = math.random; -- without the (), this caches the random() function
@@ -25,10 +26,11 @@ local offsetSpeed;
 local rainDirection = 0;
 local mychannel, mysource;
 local initializeGame  --forward declaration
-local extendedPurchased = false; 
+
 local optionsMenuScreen;
 local settingsPrompt;
 
+local sleepTimerWasOff = true;
 local theClock;
 local wanderDestinationX =  mRand(1024);
 local wanderDestinationY =  mRand(768)
@@ -59,67 +61,158 @@ local drops = {};
 ---------- END Declare libraries and globals ----------
 
 
+
 ---------- INIT GAME FUNCTION. (Run every time game is launched and reset) ----------
+local function writePurchase()
+ local saveData = "1"
+   
+              -- Path for the file to write
+              local path = system.pathForFile( "jrd.txt", system.DocumentsDirectory )
+   
+              -- Open the file handle
+              local file, errorString = io.open( path, "w" )
+   
+              if not file then
+                -- Error occurred; output the cause
+                print( "File error: " .. errorString )
+              else
+                -- Write data to file
+                file:write( saveData )
+                -- Close the file handle
+                io.close( file )
+              end
+   
+              file = nil
+end
 
--- --  Check for in app purchases
--- function transactionCallback( event )
+local function readPurchase()
+   local path = system.pathForFile( "jrd.txt", system.DocumentsDirectory )
+               local contents = ""
+              -- Open the file handle
+              local file, errorString = io.open( path, "r" )
+               
+              if not file then
+                  -- Error occurred; output the cause
+                  print( "File error: " .. errorString )
+              else
+                  -- Read data from file
+                  contents = file:read( "*a" )
+                  -- Output the file contents
+                  print( "Contents of " .. path .. "\n" .. contents )
+                  if contents == "1" then
+                    print("YES YES YES!!!!")
+
+                  end
+                  -- Close the file handle
+                  io.close( file )
+              end
+               
+              file = nil
+              if (contents == "1") then
+                return true
+              else 
+                return false
+
+              end
+          
+end
+
+
+local function transactionListener( event )
  
---     -- Log transaction info.
---     print("transactionCallback: Received event " .. tostring(event.name))
---     print("state: " .. tostring(event.transaction.state))
---     print("errorType: " .. tostring(event.transaction.errorType))
---     print("errorString: " .. tostring(event.transaction.errorString))
+    local transaction = event.transaction
  
---     local productID= event.transaction.productIdentifier;
---     if event.transaction.state == "purchased" then
---         print("Product Purchased: ", productID)
+    if ( transaction.isError ) then
+        print (event.name)
+        print( transaction.errorType )
+        print( transaction.errorString )
+    else
+        -- No errors; proceed
+        if ( transaction.state == "purchased" or transaction.state == "restored" ) then
+            -- Handle a normal purchase or restored purchase here
+            print( transaction.state )
+            print( transaction.productIdentifier )
+            print( transaction.date )
+            if (transaction.productIdentifier == "extendedtest") then
+              extendedPurchased = true;
+              optionsMenuScreen:activateOptions();
+              writePurchase();
+            end
+ 
+        elseif ( transaction.state == "cancelled" ) then
+            -- Handle a cancelled transaction here
+ 
+        elseif ( transaction.state == "failed" ) then
+            -- Handle a failed transaction here
+            if transaction.productIdentifier == "extendedtest" then
+              if (readPurchase()) then
+                extendedPurchased = true;
+              end
+            end
+        end
+ 
+        -- Tell the store that the transaction is complete
+        -- If you're providing downloadable content, do not call this until the download has completed
+        store.finishTransaction( transaction )
+    end
+end
+ 
+-- Initialize store
+store.init( transactionListener )
+
+local productIdentifiers = {
+    "extendedtest",
+    "net.robysoft.justrain.extendedtest"
+}
+
+
+local function productListener( event )
+ 
+    for i = 1,#event.products do
+        print( event.products[i].productIdentifier )
+        print( event.products[i].title )
+        print( event.products[i].description )
+    end
+end
+ 
+-- Load store products; store must be properly initialized by this point!
+
+
+local function loadProds( event )
+    print( "listener called" )
+    store.loadProducts( productIdentifiers, productListener )
+    timer.performWithDelay( 1000, restorePurchases )
+end
+  
+timer.performWithDelay( 1000, loadProds )
+
+
+
+
+ function purchaseItem(event)
+    --make sure you add { } around your product id as you need to send a table value... not a string!
+      print("is store active?")
+      print(store.isActive);
+      if (store.isActive) then
+        store.purchase( "extendedtest")
+      elseif (readPurchase()) then
+        optionsMenuScreen:activateOptions();
+        extendedPurchased = true;
+      else 
+        local alert = native.showAlert( "No network connection", "Couldn't connect to Google Play. Please check your internet connection.", { "OK"}, onComplete )
+      end
         
---     elseif  event.transaction.state == "restored" then
---         print("Product Restored", productID)
---         extendedPurchased = true;
- 
---     elseif  event.transaction.state == "refunded" then
---         print("Product Refunded")
- 
---     elseif event.transaction.state == "cancelled" then
---         print("Transaction cancelled")
- 
---     elseif event.transaction.state == "failed" then        
---         print("Transaction Failed")
-        
---     else
---         print("Some unknown event occured.  This should never happen.")
---     end
- 
---     -- Tell the store we are done with the transaction.
---     -- If you are providing downloadable content, do not call this until
---     -- the download has completed.
---     store.finishTransaction( event.transaction )
--- end
+    
 
--- if store.availableStores.apple then
---     store.init("apple", transactionCallback)
---     print("Using Apple's in-app purchase system.")
     
--- elseif store.availableStores.google then
---     store.init("google", transactionCallback)
---     print("Using Google's Android In-App Billing system.")
-    
--- else
-
--- end
-
---  function purchaseItem(event)
---     --make sure you add { } around your product id as you need to send a table value... not a string!
---     store.purchase( {"extended"})
-    
--- end
+end
  
---  function restorePurchases(event)
---     --no need to sepcify a product
---     store.restore()
+ function restorePurchases(event)
+    --no need to sepcify a product
+    store.restore()
+
     
--- end
+end
 
 -- restorePurchases();
 local function recalculateRain(locx,locy, anim)
@@ -424,6 +517,30 @@ local function manageAutoDim()
 
 end
 
+local function manageSleepTimer()
+  
+  -- print(timeSinceLastInteraction)
+
+  if (optionsMenuScreen.options[6].toggle == "on" and sleepTimerWasOff) then
+    sleepTimerWasOff = false;
+    timeSleepTimerSet = os.time();
+  end
+
+  if (optionsMenuScreen.options[6].toggle == "on") then 
+      print(os.time() - timeSleepTimerSet)
+    local timeSinceSleepTimerSet = os.time() - timeSleepTimerSet;
+    if (timeSinceSleepTimerSet > 10) then
+     native.requestExit()
+  
+    end
+  end
+
+   if (optionsMenuScreen.options[6].toggle == "off") then
+    sleepTimerWasOff = true;
+  end
+
+end
+
 local function manageExtraThunder()
 
   if (optionsMenuScreen.options[5].toggle == "on") then
@@ -450,6 +567,22 @@ if (thunderFrameCount % 300 == 0) then
  end
 end
 end
+
+local function manageMonochromeMode()
+  if (optionsMenuScreen.options[7].toggle == "on") then
+            BG.fill.effect = "filter.grayscale"
+          overlay1.fill.effect = "filter.grayscale"
+          overlay2.fill.effect = "filter.grayscale"
+          overlay3.fill.effect = "filter.grayscale"
+
+        else
+  BG.fill.effect = ""
+          overlay1.fill.effect = ""
+          overlay2.fill.effect = ""
+          overlay3.fill.effect = ""
+        end
+  end
+
 local function manageWanderMode()
 
   if (optionsMenuScreen.options[3].toggle == "on") then
@@ -502,11 +635,13 @@ local function runMain()
   manageClock();
   manageAutoDim()
   manageExtraThunder()
+  manageSleepTimer();
 --print( display.fps )
 theBox.x = theBox.x + ouyaXVelocity;
 theBox.y = theBox.y + ouyaYVelocity;
 
   manageWanderMode();
+  manageMonochromeMode();
 if (theBox.x >= w) then
   theBox.x = w;
 end
@@ -649,12 +784,17 @@ local function memCheck()
     BG.width = display.actualContentWidth;
     BG.height = 1200;
 
+    BG.fill.effect = "filter.grayscale"
+
     overlay1 = display.newImage("overlay1c.png",true);
 
     overlay1:setReferencePoint(display.TopCenterReferencePoint)
     overlay1.x = display.contentWidth/2;
     overlay1.y=0;
     overlay1.width = display.actualContentWidth;
+
+    overlay1.fill.effect = "filter.grayscale"
+
    
     overlay2 = display.newImage("overlay2c.png",true);
 
@@ -671,11 +811,19 @@ local function memCheck()
     overlay3.width = display.actualContentWidth/2;
      -- overlay3.alpha = 0;
 
+
+     overlay1.fill.effect = "filter.grayscale"
+    
+    overlay2.fill.effect = "filter.grayscale"
+
+
+    overlay3.fill.effect = "filter.grayscale"
+
        -- backPrompt.alpha = 1.0;
-     menuHotZone = display.newRect(display.screenOriginX, display.contentHeight - 200, 300, 200);
+     menuHotZone = display.newRect(display.screenOriginX, display.contentHeight - 200, 100, 200);
     menuHotZone:setFillColor(255,255,255);
-    menuHotZone.alpha = 0.0;
-    menuHotZone.isHitTestable = false; --CHANGE
+    menuHotZone.alpha = 0;
+    menuHotZone.isHitTestable = true; --CHANGE
 
   
 
@@ -684,7 +832,8 @@ local function memCheck()
     if (event.phase == "began") then
     if (optionsMenuScreen.activated ~= true) then
       menuHotZone.isHitTestable = false;
-optionsMenuScreen:activate();
+      transition.to(menuHotZone,{time=1000, alpha=0.0});
+      optionsMenuScreen:activate();
    end
  end
  end
@@ -716,14 +865,21 @@ optionsMenuScreen:activate();
     
     -- create the menu options
     settingsPrompt = display.newGroup();
-    settingsPrompt.alpha = 0;
+    settingsPrompt.alpha = 1.0;
     local menuIcon = display.newImage("amazonmenu.png",display.screenOriginX + 50,650)
     local menuText = display.newText("Tap this corner to access menu", display.screenOriginX + 100, 649, "Knockout-HTF29-JuniorLiteweight", 40)
+    menuIcon.alpha = 0
+    menuText.alpha = 0
+    transition.to(menuIcon,{time=1000, alpha=1.0});
+    transition.to(menuText,{time=1000, alpha=1.0});
+    
     settingsPrompt:insert(menuIcon);
     settingsPrompt:insert(menuText);
+    transition.to(menuIcon,{time=3000, delay=5000, alpha=0.0});
+    transition.to(menuText,{time=3000, delay=5000, alpha=0.0});
     -- transition.to(settingsPrompt,{time=1000, delay=1000, alpha=1.0});
     -- transition.to(settingsPrompt,{time=1000, delay=8000, alpha=0.0});
-    optionsMenuScreen = OptionsMenu.new();
+    optionsMenuScreen = OptionsMenu.new(extendedPurchased);
    
 
     dimBg = display.newRect(0,0,2920,1080)

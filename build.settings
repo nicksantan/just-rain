@@ -1,6 +1,9 @@
 settings =
 {
-      
+         splashScreen = 
+        {
+            enable = false
+        },
         orientation =
         {
                 default = "landscapeLeft",
@@ -37,6 +40,17 @@ settings =
 
             }
         },
+        plugins =
+    {
+        ["plugin.CoronaSplashControl"] =
+        {
+            publisherId = "com.coronalabs"
+        },
+        ["plugin.google.iap.v3"] =
+        {
+            publisherId = "com.coronalabs"
+        },
+    },
         android =
         {  
         usesPermissions =
