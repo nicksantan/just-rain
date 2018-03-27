@@ -6,7 +6,9 @@ application =
                 width = 768,
                 height = 1024,
                	scale = "letterbox",
-               	fps = 30
+               	fps = 30,
+                xAlign = "center",
+                yAlign = "center"
               
         },
         license =

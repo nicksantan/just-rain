@@ -1,5 +1,5 @@
 ---------- Declare libraries and globals ----------
-extendedPurchased = true; 
+extendedPurchased = false; 
 timeSleepTimerSet = os.time();
 local physics = require "physics"
 -- local ouya_c = require("OuyaController")
@@ -529,7 +529,7 @@ local function manageSleepTimer()
   if (optionsMenuScreen.options[6].toggle == "on") then 
       print(os.time() - timeSleepTimerSet)
     local timeSinceSleepTimerSet = os.time() - timeSleepTimerSet;
-    if (timeSinceSleepTimerSet > 10) then
+    if (timeSinceSleepTimerSet > 60*60) then
      native.requestExit()
   
     end
@@ -632,6 +632,7 @@ local function fireSplish(whereX, whereY)
 end
 local function runMain()
 -- ouyaText:toFront();
+-- print(display.actualContentWidth)
   manageClock();
   manageAutoDim()
   manageExtraThunder()

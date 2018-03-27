@@ -73,10 +73,14 @@ purchaseHotZone.isHitTestable = false;
 
     -- local selectIcon = display.newImage("ouyaselect.png", 150,800)
     -- local selectText = display.newText("SELECT",200,789, "Knockout-HTF29-JuniorLiteweight", 40)
-    local purchaseIcon = display.newImage("amazonback.png",display.pixelHeight,650)
-    purchaseIcon:setReferencePoint(display.CenterRightReferencePoint);
+    -- local purchaseIcon = display.newImage("amazonback.png",display.pixelHeight,650)
+    -- purchaseIcon:setReferencePoint(display.CenterRightReferencePoint);
+    -- purchaseIcon.x = display.screenOriginX + display.actualContentWidth;
+
+
     local purchaseText = display.newText("Purchase Extended Features", display.actualContentWidth - 560, 649, "Knockout-HTF29-JuniorLiteweight", 40)
     purchaseText:setReferencePoint(display.TopRightReferencePoint)
+    purchaseText.x = display.screenOriginX + display.actualContentWidth - 50;
   
 
  if (extendedPurchased == true) then
@@ -92,7 +96,7 @@ end
     backPrompt:insert(backText);
     backPrompt:insert(backHotZone);
     backPrompt:insert(purchaseHotZone);
-    backPrompt:insert(purchaseIcon);
+    -- backPrompt:insert(purchaseIcon);
     backPrompt:insert(purchaseText)
    
  local function purchaseTouch(self, event)
@@ -196,7 +200,7 @@ optionFourToggleBox.id = 5;
 optionFourToggleBox.touch = onToggleTouch
 optionFourToggleBox:addEventListener( "touch", optionFourToggleBox )
 
-local optionSleepTimerText = display.newText("Sleep Timer", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
+local optionSleepTimerText = display.newText("Sleep Timer (App will shut off after one hour)", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
 optionSleepTimerText:setReferencePoint(display.TopLeftReferencePoint);
 optionSleepTimerText.alpha = minTextAlpha;
 optionSleepTimerText.x = textXStart;
@@ -263,17 +267,23 @@ optionsMenu:insert(optionBlackAndWhiteText)
         optionAutoDimText.alpha = 0.2;
         optionExtraThunderText.alpha = 0.2;
 
+      for i=1,#self.options do
+        if (self.options[i]["extended"]) then
+          self.options[i]["text"].alpha =0.2
+        end
       end
+
+    end
       self.activated = true;
   end
 
   function optionsMenu:activateOptions()
     -- transition.to(self, {time = 500, alpha = 1.0})
-    optionClockText.alpha = 1.0
-    muteSoundText.alpha = 1.0
-    optionWanderText.alpha = 1.0
-    optionAutoDimText.alpha = 1.0
-    optionExtraThunderText.alpha = 1.0
+    optionClockText.alpha = 0.8
+    muteSoundText.alpha = 0.8
+    optionWanderText.alpha = 0.8
+    optionAutoDimText.alpha = 0.8
+    optionExtraThunderText.alpha = 0.8
   end
   function optionsMenu:deactivate()
   	transition.to(self, {time = 500, alpha = 0.0})
