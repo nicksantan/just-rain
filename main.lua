@@ -1,4 +1,21 @@
 ---------- Declare libraries and globals ----------
+
+local FPSCalculator = require("FPSCalculator")
+
+local fpsCalculator = FPSCalculator.new(
+    function(fps, fpsRatio)             
+        print("fps = " .. fps .. ", ratio = " .. fpsRatio)
+        -- Do things here to handle a drop in frame rate, such as disable animations
+    end,
+    {            
+        fpsRatioWarningThreshold = 0.95,            
+        timeBetweenCalculationsMs = 100,
+    }
+)
+
+fpsCalculator:start()
+
+
 extendedPurchased = false; 
 timeSleepTimerSet = os.time();
 local physics = require "physics"
@@ -10,6 +27,7 @@ local Clock = require("Clock")
 local store = require( "plugin.google.iap.v3" )
 
 display.setStatusBar( display.HiddenStatusBar )
+local dropPool = {}
 mRand = math.random; -- without the (), this caches the random() function
 local rainRate = 3.5;
 local theBox;
@@ -157,6 +175,8 @@ local function transactionListener( event )
     end
 end
  
+ 
+
 -- Initialize store
 store.init( transactionListener )
 
@@ -630,9 +650,42 @@ local function fireSplish(whereX, whereY)
   splish.y = whereY;
   transition.to(splish, {time=100, alpha=0.0, xScale=4.0, onComplete=splishRemove})
 end
+
+local function createDropPool()
+for i = 1, 500 do
+    local drop = display.newImageRect("rain.png", 3, 17);
+    -- dropGroup:insert(drop);
+    local dropCollisionFilter ={ groupIndex = -2 }
+    drop:setReferencePoint(display.BottomCenterReferencePoint)
+    local randomDropLength = (100 + mRand(500))/100;
+    drop.yScale = randomDropLength;
+    local randomXVelFactor = mRand(-50,50)
+    physics.addBody(drop, {density = 1, friction = .3, bounce = .01, filter=dropCollisionFilter});
+    drop:setLinearVelocity(0,0); --rainDirection will range from -512 to 512
+    local rotationAngle = math.deg(math.atan2(-(rainDirection+randomXVelFactor),900)); 
+    --rotationAngle = 0;
+    --print (rotationAngle);
+    drop.rotation = rotationAngle;
+    --give the drop a random end value
+    drop.endValue = mRand(h-180,h-20);
+    drop.alpha = 0.8;
+    sourcePan = rainDirection / 2.5;
+    drop.x = mRand(-320,w+300) - sourcePan;
+    drop.y = 0;
+    
+  
+  
+    dropPool[i] = drop 
+    dropPool[i].isAlive = false
+end 
+
+end
+
+
 local function runMain()
 -- ouyaText:toFront();
 -- print(display.actualContentWidth)
+-- print( display.fps )
   manageClock();
   manageAutoDim()
   manageExtraThunder()
@@ -658,27 +711,14 @@ end
 
 recalculateRain(theBox.x,theBox.y, 0);
 -- Add new drops at the rate and direction that is current, with a random start value
-
-for i = 1, rainRate do
-
-  local function onLocalCollision( self, event )
-    if ( event.phase == "began" ) then
-     self.isVisible = false;
-                -- self = nil;
-    end
-  end
-
-
-    local dropCollisionFilter ={ groupIndex = -2 }
-    local drop = display.newImageRect("rain.png", 3, 17);
-    dropGroup:insert(drop);
-    drop:setReferencePoint(display.BottomCenterReferencePoint)
-    local randomDropLength = (100 + mRand(500))/100;
-    drop.yScale = randomDropLength;
-    local randomXVelFactor = mRand(-50,50)
-    physics.addBody(drop, {density = 1, friction = .3, bounce = .01, filter=dropCollisionFilter});
-    drop:setLinearVelocity(rainDirection+randomXVelFactor, offsetSpeed + 800 + mRand(200)); --rainDirection will range from -512 to 512
-    local rotationAngle = math.deg(math.atan2(-(rainDirection+randomXVelFactor),900)); 
+for i = 1, 10 do 
+  for i = #dropPool, 1, -1 do
+    local drop = dropPool[i]
+    if (drop.isAlive == false) then
+      drop.isAlive = true
+      local randomXVelFactor = mRand(-50,50)
+      drop:setLinearVelocity(rainDirection+randomXVelFactor, offsetSpeed + 800 + mRand(200)); --rainDirection will range from -512 to 512
+        local rotationAngle = math.deg(math.atan2(-(rainDirection+randomXVelFactor),900)); 
     --rotationAngle = 0;
     --print (rotationAngle);
     drop.rotation = rotationAngle;
@@ -687,14 +727,47 @@ for i = 1, rainRate do
     drop.alpha = 0.8;
     sourcePan = rainDirection / 2.5;
     drop.x = mRand(-320,w+300) - sourcePan;
-    drop.y = 0;
-    
-    drop.collision = onLocalCollision
-    drop:addEventListener( "collision", drop )
-    table.insert( drops, drop )
-
-
+      return
+    end
   end
+end
+-- for i = 1, rainRate do
+
+--   local function onLocalCollision( self, event )
+--     if ( event.phase == "began" ) then
+--      self.isVisible = false;
+
+--                 -- self = nil;
+--     end
+--   end
+
+
+--     local dropCollisionFilter ={ groupIndex = -2 }
+--     local drop = display.newImageRect("rain.png", 3, 17);
+--     dropGroup:insert(drop);
+--     drop:setReferencePoint(display.BottomCenterReferencePoint)
+--     local randomDropLength = (100 + mRand(500))/100;
+--     drop.yScale = randomDropLength;
+--     local randomXVelFactor = mRand(-50,50)
+--     physics.addBody(drop, {density = 1, friction = .3, bounce = .01, filter=dropCollisionFilter});
+--     drop:setLinearVelocity(rainDirection+randomXVelFactor, offsetSpeed + 800 + mRand(200)); --rainDirection will range from -512 to 512
+--     local rotationAngle = math.deg(math.atan2(-(rainDirection+randomXVelFactor),900)); 
+--     --rotationAngle = 0;
+--     --print (rotationAngle);
+--     drop.rotation = rotationAngle;
+--     --give the drop a random end value
+--     drop.endValue = mRand(h-180,h-20);
+--     drop.alpha = 0.8;
+--     sourcePan = rainDirection / 2.5;
+--     drop.x = mRand(-320,w+300) - sourcePan;
+--     drop.y = 0;
+    
+--     drop.collision = onLocalCollision
+--     drop:addEventListener( "collision", drop )
+--     table.insert( drops, drop )
+
+
+--   end
 
 
 
@@ -710,22 +783,34 @@ for i = 1, rainRate do
     --     end
     -- end
 
-    for i = #drops, 1, -1 do
-      if drops[i].y > drops[i].endValue then
-      if drops[i].isVisible then 
-        fireSplish(drops[i].x, drops[i].endValue);
+  --   for i = #drops, 1, -1 do
+  --     if drops[i].y > drops[i].endValue then
+  --     if drops[i].isVisible then 
+  --       fireSplish(drops[i].x, drops[i].endValue);
+  --     end
+  --     local child = table.remove(drops, i)
+  --     if child ~= nil then
+  --       display.remove(child)
+  --       child = nil
+  --     end
+  --   end
+  -- end
+
+
+    
+  for i = #dropPool, 1, -1 do
+    print (dropPool[i].y)
+      if dropPool[i].y > dropPool[i].endValue then
+      if dropPool[i].isAlive then 
+        print ("firing splish")
+        fireSplish(dropPool[i].x, dropPool[i].endValue);
       end
-      local child = table.remove(drops, i)
-      if child ~= nil then
-        display.remove(child)
-        child = nil
-      end
+      -- reset drops
+      dropPool[i].y = 0
+      dropPool[i]:setLinearVelocity(0,0);
+      dropPool[i].isAlive = false;
     end
   end
-
-if (titleScreen ~=nil ) then
-  -- titleScreen:toFront();
-end
 
 end
 --
@@ -826,7 +911,7 @@ local function memCheck()
     menuHotZone.alpha = 0;
     menuHotZone.isHitTestable = true; --CHANGE
 
-  
+    createDropPool();
 
    
    local function menuTouch(self, event)
