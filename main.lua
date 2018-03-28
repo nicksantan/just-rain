@@ -1,5 +1,5 @@
 ---------- Declare libraries and globals ----------
-extendedPurchased = false; 
+extendedPurchased = true; 
 timeSleepTimerSet = os.time();
 local physics = require "physics"
 -- local ouya_c = require("OuyaController")

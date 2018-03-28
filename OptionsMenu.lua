@@ -84,7 +84,7 @@ purchaseHotZone.isHitTestable = false;
   
 
  if (extendedPurchased == true) then
-purchaseIcon.alpha = 0;
+-- purchaseIcon.alpha = 0;
 purchaseText.alpha = 0;
 purchaseHotZone.alpha = 0;
 purchaseHotZone.isHitTestable = false;
@@ -279,11 +279,13 @@ optionsMenu:insert(optionBlackAndWhiteText)
 
   function optionsMenu:activateOptions()
     -- transition.to(self, {time = 500, alpha = 1.0})
-    optionClockText.alpha = 0.8
-    muteSoundText.alpha = 0.8
-    optionWanderText.alpha = 0.8
-    optionAutoDimText.alpha = 0.8
-    optionExtraThunderText.alpha = 0.8
+    for i=1,#self.options do
+        if (self.options[i]["extended"]) then
+          self.options[i]["text"].alpha =0.8
+        end
+      end
+      purchaseText.alpha = 0;
+      purchaseText.isHitTestable = false;
   end
   function optionsMenu:deactivate()
   	transition.to(self, {time = 500, alpha = 0.0})

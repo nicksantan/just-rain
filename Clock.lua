@@ -14,7 +14,7 @@ function Clock.new()
   timeDisplay.x = 800;
   timeDisplay.y = 650;
   dateDisplay:setReferencePoint(display.bottomRightReferencePoint)
-  dateDisplay.x = 770;
+  dateDisplay.x = 800;
   dateDisplay.y = 550;
   local maxAlpha = 0.75;
 
