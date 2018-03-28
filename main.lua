@@ -1,5 +1,5 @@
 ---------- Declare libraries and globals ----------
-extendedPurchased = true; 
+extendedPurchased = false; 
 timeSleepTimerSet = os.time();
 local physics = require "physics"
 -- local ouya_c = require("OuyaController")
@@ -133,7 +133,7 @@ local function transactionListener( event )
             print( transaction.state )
             print( transaction.productIdentifier )
             print( transaction.date )
-            if (transaction.productIdentifier == "extendedtest") then
+            if (transaction.productIdentifier == "extendedfeatures") then
               extendedPurchased = true;
               optionsMenuScreen:activateOptions();
               writePurchase();
@@ -144,7 +144,7 @@ local function transactionListener( event )
  
         elseif ( transaction.state == "failed" ) then
             -- Handle a failed transaction here
-            if transaction.productIdentifier == "extendedtest" then
+            if transaction.productIdentifier == "extendedfeatures" then
               if (readPurchase()) then
                 extendedPurchased = true;
               end
@@ -161,8 +161,7 @@ end
 store.init( transactionListener )
 
 local productIdentifiers = {
-    "extendedtest",
-    "net.robysoft.justrain.extendedtest"
+    "extendedfeatures"
 }
 
 
@@ -194,7 +193,7 @@ timer.performWithDelay( 1000, loadProds )
       print("is store active?")
       print(store.isActive);
       if (store.isActive) then
-        store.purchase( "extendedtest")
+        store.purchase( "extendedfeatures")
       elseif (readPurchase()) then
         optionsMenuScreen:activateOptions();
         extendedPurchased = true;
@@ -378,7 +377,7 @@ end
 
 
 function manageTouch(event)
-
+print(optionsMenuScreen.activated)
   if (optionsMenuScreen.activated ~= true) then
     -- if (event.x < display.screenOriginX + 300 and event.y > display.actualContentHeight - 300) then
     --   optionsMenuScreen:activate();
@@ -821,12 +820,15 @@ local function memCheck()
     overlay3.fill.effect = "filter.grayscale"
 
        -- backPrompt.alpha = 1.0;
-     menuHotZone = display.newRect(display.screenOriginX, display.contentHeight - 200, 100, 200);
+     menuHotZone = display.newRect(display.screenOriginX, display.contentHeight - 200, 200, 200);
     menuHotZone:setFillColor(255,255,255);
     menuHotZone.alpha = 0;
-    menuHotZone.isHitTestable = true; --CHANGE
+    menuHotZone.isHitTestable = false; 
 
   
+local function activateMenuHotZone()
+menuHotZone.isHitTestable = true; 
+end
 
    
    local function menuTouch(self, event)
@@ -867,17 +869,32 @@ local function memCheck()
     -- create the menu options
     settingsPrompt = display.newGroup();
     settingsPrompt.alpha = 1.0;
+
+    local instructionsText = display.newText("Touch the screen to change the intensity and direction of the rain.", display.contentCenterX, 649, "Knockout-HTF29-JuniorLiteweight", 40)
+   -- local menuText = display.newText("Click your remote for more options.", 1080/2, 1920/2, "Knockout-HTF29-JuniorLiteweight", 40)
+    instructionsText:setReferencePoint(display.centerReferencePoint);
+    instructionsText.x = display.contentCenterX
+    instructionsText.alpha = 0
+    -- instructionsText:setAnchor(0.5,0.5)
+    instructionsText:setReferencePoint(display.centerReferencePoint);
+    --menuText:setReferencePoint(display.centerReferencePoint);
+    -- settingsPrompt:insert(menuIcon);
+    settingsPrompt:insert(instructionsText);
+    --settingsPrompt:insert(menuText);
+    transition.to(instructionsText,{time=2000, delay=6000, alpha=1.0});
+    transition.to(instructionsText,{time=2000, delay=13000, alpha=0.0});
     local menuIcon = display.newImage("amazonmenu.png",display.screenOriginX + 50,650)
     local menuText = display.newText("Tap this corner to access menu", display.screenOriginX + 100, 649, "Knockout-HTF29-JuniorLiteweight", 40)
     menuIcon.alpha = 0
     menuText.alpha = 0
-    transition.to(menuIcon,{time=1000, alpha=1.0});
-    transition.to(menuText,{time=1000, alpha=1.0});
+    transition.to(menuIcon,{time=2000, delay=15000, alpha=1.0});
+    transition.to(menuText,{time=2000, delay=15000, alpha=1.0});
     
     settingsPrompt:insert(menuIcon);
     settingsPrompt:insert(menuText);
-    transition.to(menuIcon,{time=3000, delay=5000, alpha=0.0});
-    transition.to(menuText,{time=3000, delay=5000, alpha=0.0});
+    timer.performWithDelay( 5000, activateMenuHotZone )
+    transition.to(menuIcon,{time=2000, delay=20000, alpha=0.0});
+    transition.to(menuText,{time=2000, delay=20000, alpha=0.0});
     -- transition.to(settingsPrompt,{time=1000, delay=1000, alpha=1.0});
     -- transition.to(settingsPrompt,{time=1000, delay=8000, alpha=0.0});
     optionsMenuScreen = OptionsMenu.new(extendedPurchased);

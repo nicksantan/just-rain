@@ -112,7 +112,12 @@ end
     if (event.phase == "began") then
 optionsMenu:deactivate();
 menuHotZone.isHitTestable = true;
-end
+return true
+  end
+    if (event.phase == "ended") then
+      return true
+    end
+
    end
       backHotZone.touch = backTouch;
  backHotZone:addEventListener( "touch",  backHotZone )
