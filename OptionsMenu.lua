@@ -115,7 +115,7 @@ menuHotZone.isHitTestable = true;
 return true
   end
     if (event.phase == "ended") then
-      return true
+    
     end
 
    end

@@ -1,5 +1,5 @@
 ---------- Declare libraries and globals ----------
-extendedPurchased = false; 
+extendedPurchased = true; 
 timeSleepTimerSet = os.time();
 local physics = require "physics"
 -- local ouya_c = require("OuyaController")
@@ -382,8 +382,9 @@ print(optionsMenuScreen.activated)
     -- if (event.x < display.screenOriginX + 300 and event.y > display.actualContentHeight - 300) then
     --   optionsMenuScreen:activate();
     -- else
-
+    local touchYes = 0;
           if (event.phase == "began") then
+            touchYes = 1;
             -- print("touch began");
             updateLastInteractionTime();
             physics.addBody(theBox, {density = 1, friction = .3, bounce = .01, isSensor=true});
@@ -395,6 +396,7 @@ print(optionsMenuScreen.activated)
         end
 
         if (event.phase == "moved") then
+          -- if (touchYes == 1) then
           updateLastInteractionTime();
           -- make sure that the overlay doesn't slide past the end of the screen
         if (event.y < h) then
@@ -404,10 +406,13 @@ print(optionsMenuScreen.activated)
          theBox.x = event.x;
          theBox.y = event.y;
         recalculateRain(theBox.x, theBox.y, 0)
-          end
+          -- end
         end
+      end
         end
         if (event.phase == "ended") then
+        if (touchYes == 1) then
+          print("ended")
         updateLastInteractionTime();
         -- print("touch ended");
         theBox.x = event.x;
@@ -416,6 +421,7 @@ print(optionsMenuScreen.activated)
         recalculateRain(theBox.x, theBox.y, 0)
         physics.removeBody( theBox );
         end
+      end
       -- end
 end
 
