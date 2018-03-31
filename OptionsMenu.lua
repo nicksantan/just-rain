@@ -5,7 +5,7 @@ module(..., package.seeall)
 -- local extendedPurchased = false;
 local OptionsMenu = {}
  
-function OptionsMenu.new(extended)
+function OptionsMenu.new(analytics)
   -- local extendedPurchased = extended;
   local optionsMenu = display.newGroup();
   local bg = display.newRect(600,400,display.actualContentWidth,display.actualContentHeight)
@@ -14,6 +14,7 @@ function OptionsMenu.new(extended)
   local textYStart = 80;
   local textYSpacing = 70;
   local textXStart = 50;
+  googleAnalytics = analytics
   bg:setReferencePoint(display.centerReferencePoint);
   bg.x = display.contentCenterX
   bg.y = display.contentCenterY;
@@ -252,13 +253,13 @@ optionsMenu:insert(optionSixToggleBox)
 optionsMenu:insert(optionBlackAndWhiteText)
   
   optionsMenu.options = {
-  {text = muteSoundText, toggle = "off", toggleBox = muteSoundToggleBox, extended = false},
-  {text = optionClockText, toggle = "off", toggleBox = optionClockToggleBox, extended = false},
-  {text = optionWanderText, toggle = "off", toggleBox = optionTwoToggleBox, extended = true},
-  {text = optionAutoDimText, toggle = "off", toggleBox = optionThreeToggleBox, extended = true},
-  {text = optionExtraThunderText, toggle = "off", toggleBox = optionFourToggleBox, extended = true},
-  {text = optionSleepTimerText, toggle = "off", toggleBox = optionFiveToggleBox, extended = true},
-  {text = optionBlackAndWhiteText, toggle = "off", toggleBox = optionSixToggleBox, extended = true},
+  {text = muteSoundText, toggle = "off", toggleBox = muteSoundToggleBox, extended = false, label = "mute"},
+  {text = optionClockText, toggle = "off", toggleBox = optionClockToggleBox, extended = false, label = "clock"},
+  {text = optionWanderText, toggle = "off", toggleBox = optionTwoToggleBox, extended = true, label = "wander"},
+  {text = optionAutoDimText, toggle = "off", toggleBox = optionThreeToggleBox, extended = true, label = "auto-dim"},
+  {text = optionExtraThunderText, toggle = "off", toggleBox = optionFourToggleBox, extended = true, label = "extra thunder"},
+  {text = optionSleepTimerText, toggle = "off", toggleBox = optionFiveToggleBox, extended = true, label = "sleep timer"},
+  {text = optionBlackAndWhiteText, toggle = "off", toggleBox = optionSixToggleBox, extended = true, label = "black and white"},
 
 }
   function optionsMenu:activate()
@@ -271,6 +272,7 @@ optionsMenu:insert(optionBlackAndWhiteText)
         optionWanderText.alpha = 0.2;
         optionAutoDimText.alpha = 0.2;
         optionExtraThunderText.alpha = 0.2;
+        googleAnalytics.logEvent( "userAction", "button press", "menu activate" )
 
       for i=1,#self.options do
         if (self.options[i]["extended"]) then
@@ -294,6 +296,7 @@ optionsMenu:insert(optionBlackAndWhiteText)
   end
   function optionsMenu:deactivate()
   	transition.to(self, {time = 500, alpha = 0.0})
+    googleAnalytics.logEvent( "userAction", "button press", "menu deactivated" )
   	self.activated = false;
   end
 
@@ -336,9 +339,11 @@ optionsMenu:insert(optionBlackAndWhiteText)
     print('toggle')
     	if (self.options[self.selection].toggle == "off") then
     		self.options[self.selection].toggle = "on"
+        googleAnalytics.logEvent( "userAction", "toggle on", self.options[self.selection].label  )
         self.options[self.selection].toggleBox.alpha = 1.0;
      	else
      		self.options[self.selection].toggle = "off"
+        googleAnalytics.logEvent( "userAction", "toggle off", self.options[self.selection].label  )
          self.options[self.selection].toggleBox.alpha = minToggleBoxAlpha;
      	end
     	

@@ -1,4 +1,5 @@
 ---------- Declare libraries and globals ----------
+
 extendedPurchased = false; 
 timeSleepTimerSet = os.time();
 local physics = require "physics"
@@ -7,7 +8,9 @@ local physics = require "physics"
 local OptionsMenu = require("OptionsMenu")
 local Clock = require("Clock")
 --local store = require("store")
+
 local store = require( "plugin.google.iap.v3" )
+local googleAnalytics = require( "plugin.googleAnalytics" )
 
 display.setStatusBar( display.HiddenStatusBar )
 mRand = math.random; -- without the (), this caches the random() function
@@ -158,7 +161,11 @@ local function transactionListener( event )
 end
  
 -- Initialize store
+
 store.init( transactionListener )
+
+-- Initialize Google Analytics
+googleAnalytics.init( "justrainandroid", "UA-116723846-1" )
 
 local productIdentifiers = {
     "extendedfeatures"
@@ -194,6 +201,7 @@ timer.performWithDelay( 1000, loadProds )
       print(store.isActive);
       if (store.isActive) then
         store.purchase( "extendedfeatures")
+      googleAnalytics.logEvent( "userAction", "button press", "purchase extended features" )
       elseif (readPurchase()) then
         optionsMenuScreen:activateOptions();
         extendedPurchased = true;
@@ -513,7 +521,7 @@ local function manageAutoDim()
 
   if (optionsMenuScreen.options[4].toggle == "on") then
     if (timeSinceLastInteraction > (60*5)) then
-
+      googleAnalytics.logEvent( "appAction", "screen dim")
       dimBg.alpha = 0.8;
     else
       dimBg.alpha = 0;
@@ -535,6 +543,7 @@ local function manageSleepTimer()
       print(os.time() - timeSleepTimerSet)
     local timeSinceSleepTimerSet = os.time() - timeSleepTimerSet;
     if (timeSinceSleepTimerSet > 60*60) then
+    googleAnalytics.logEvent( "appAction", "sleep timer quit")
      native.requestExit()
   
     end
@@ -903,7 +912,7 @@ end
     transition.to(menuText,{time=2000, delay=20000, alpha=0.0});
     -- transition.to(settingsPrompt,{time=1000, delay=1000, alpha=1.0});
     -- transition.to(settingsPrompt,{time=1000, delay=8000, alpha=0.0});
-    optionsMenuScreen = OptionsMenu.new(extendedPurchased);
+    optionsMenuScreen = OptionsMenu.new(googleAnalytics);
    
 
     dimBg = display.newRect(0,0,2920,1080)
