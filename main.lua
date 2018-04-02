@@ -1,19 +1,26 @@
 ---------- Declare libraries and globals ----------
 
+-- Extended purchase flag (set and stored locally upon purchase so people don't have to be online to access stuff they bought)
 extendedPurchased = false; 
-timeSleepTimerSet = os.time();
+
+
+local timeSleepTimerSet = os.time();
+
 local physics = require "physics"
--- local ouya_c = require("OuyaController")
--- local ouya = require("plugin.ouya")
+
+-- Load other modules
 local OptionsMenu = require("OptionsMenu")
 local Clock = require("Clock")
---local store = require("store")
 
-local store = require( "plugin.google.iap.v3" )
+-- Load iOS store plugin
+local store = require( "store" )
+
+-- Load Google Analytics
 local googleAnalytics = require( "plugin.googleAnalytics" )
 
 display.setStatusBar( display.HiddenStatusBar )
 mRand = math.random; -- without the (), this caches the random() function
+
 local rainRate = 3.5;
 local theBox;
 local isOuya = true;
@@ -38,14 +45,15 @@ local sleepTimerWasOff = true;
 local theClock;
 local wanderDestinationX =  mRand(1024);
 local wanderDestinationY =  mRand(768)
-print (wanderDestinationX);
-print(wanderDestinationY);
+
 local wanderSpeed = .1;
 local thunderFrameCount = 0;
 local thunderCounter =  mRand(4);
 local lastInteractionTime = os.time();
 local ouyaXVelocity = 0;
 local ouyaYVelocity= 0;
+
+-- Should this be changed to dynamic screen size?
 local w = 1024;
 local h = 768;
 local debugText;
@@ -68,7 +76,8 @@ local drops = {};
 
 ---------- INIT GAME FUNCTION. (Run every time game is launched and reset) ----------
 local function writePurchase()
- local saveData = "1"
+
+  local saveData = "1"
    
               -- Path for the file to write
               local path = system.pathForFile( "jrd.txt", system.DocumentsDirectory )
