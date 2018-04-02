@@ -29,6 +29,7 @@ local offsetSpeed;
 local rainDirection = 0;
 local mychannel, mysource;
 local initializeGame  --forward declaration
+local screenDimmed = false
 
 local optionsMenuScreen;
 local settingsPrompt;
@@ -144,6 +145,7 @@ local function transactionListener( event )
  
         elseif ( transaction.state == "cancelled" ) then
             -- Handle a cancelled transaction here
+            googleAnalytics.logEvent( "userAction", "button press", "purchase cancelled" )
  
         elseif ( transaction.state == "failed" ) then
             -- Handle a failed transaction here
@@ -200,13 +202,17 @@ timer.performWithDelay( 1000, loadProds )
       print("is store active?")
       print(store.isActive);
       if (store.isActive) then
+        if (store.canMakePurchases) then
         store.purchase( "extendedfeatures")
+      else
+        local alert = native.showAlert( "Purchases are disabled", "In-App Purchases are currently disabled on your device.", { "OK"}, onComplete )
+      end
       googleAnalytics.logEvent( "userAction", "button press", "purchase extended features" )
       elseif (readPurchase()) then
         optionsMenuScreen:activateOptions();
         extendedPurchased = true;
       else 
-        local alert = native.showAlert( "No network connection", "Couldn't connect to Google Play. Please check your internet connection.", { "OK"}, onComplete )
+        local alert = native.showAlert( "No network connection", "Couldn't connect to the iTunes Store. Please check your internet connection.", { "OK"}, onComplete )
       end
         
     
@@ -521,10 +527,16 @@ local function manageAutoDim()
 
   if (optionsMenuScreen.options[4].toggle == "on") then
     if (timeSinceLastInteraction > (60*5)) then
-      googleAnalytics.logEvent( "appAction", "screen dim")
-      dimBg.alpha = 0.8;
+        if (screenDimmed == false) then
+          googleAnalytics.logEvent( "appAction", "screen dim")
+          dimBg.alpha = 0.8;
+          screenDimmed = true;
+        end
     else
-      dimBg.alpha = 0;
+      if (screenDimmed) then
+        dimBg.alpha = 0;
+        screenDimmed = false;
+      end
     end
   end
 

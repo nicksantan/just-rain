@@ -29,6 +29,7 @@ local function onToggleTouch(self, event)
   if (extendedPurchased or optionsMenu.options[self.id].extended == false) then
     if (event.phase == "began") then
       if (optionsMenu.options[self.id].toggle == "off") then
+        googleAnalytics.logEvent( "userAction", "toggle on", optionsMenu.options[self.id].label  )
             if (self.id == 6) then
           timeSleepTimerSet = os.time();
           print("SETTING TIME SLEEP TIMER SET")
@@ -41,7 +42,7 @@ local function onToggleTouch(self, event)
       else
         optionsMenu.options[self.id].toggle = "off"
         optionsMenu.options[self.id].toggleBox.alpha = minToggleBoxAlpha;
-
+        googleAnalytics.logEvent( "userAction", "toggle off", optionsMenu.options[self.id].label  )
        
 
       end
@@ -263,7 +264,8 @@ optionsMenu:insert(optionBlackAndWhiteText)
 
 }
   function optionsMenu:activate()
-  	if (extendedPurchased == true) then 
+  	googleAnalytics.logEvent( "userAction", "button press", "menu activate" )
+    if (extendedPurchased == true) then 
       transition.to(self, {time = 500, alpha = 1.0})
     else 
         transition.to(self, {time = 500, alpha = 1.0})
@@ -272,7 +274,7 @@ optionsMenu:insert(optionBlackAndWhiteText)
         optionWanderText.alpha = 0.2;
         optionAutoDimText.alpha = 0.2;
         optionExtraThunderText.alpha = 0.2;
-        googleAnalytics.logEvent( "userAction", "button press", "menu activate" )
+        
 
       for i=1,#self.options do
         if (self.options[i]["extended"]) then
