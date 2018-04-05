@@ -46,11 +46,8 @@ settings =
         ["plugin.CoronaSplashControl"] =
         {
             publisherId = "com.coronalabs"
-        },
-        ["plugin.google.iap.v3"] =
-        {
-            publisherId = "com.coronalabs"
         }
+       
     },
         android =
         {  
