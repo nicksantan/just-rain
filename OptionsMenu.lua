@@ -14,7 +14,7 @@ function OptionsMenu.new(analytics)
   local textYStart = 80;
   local textYSpacing = 70;
   local textXStart = 50;
-  googleAnalytics = analytics
+  -- googleAnalytics = analytics
   bg:setReferencePoint(display.centerReferencePoint);
   bg.x = display.contentCenterX
   bg.y = display.contentCenterY;
@@ -29,7 +29,7 @@ local function onToggleTouch(self, event)
   if (extendedPurchased or optionsMenu.options[self.id].extended == false) then
     if (event.phase == "began") then
       if (optionsMenu.options[self.id].toggle == "off") then
-        googleAnalytics.logEvent( "userAction", "toggle on", optionsMenu.options[self.id].label  )
+        -- googleAnalytics.logEvent( "userAction", "toggle on", optionsMenu.options[self.id].label  )
             if (self.id == 6) then
           timeSleepTimerSet = os.time();
           print("SETTING TIME SLEEP TIMER SET")
@@ -42,7 +42,7 @@ local function onToggleTouch(self, event)
       else
         optionsMenu.options[self.id].toggle = "off"
         optionsMenu.options[self.id].toggleBox.alpha = minToggleBoxAlpha;
-        googleAnalytics.logEvent( "userAction", "toggle off", optionsMenu.options[self.id].label  )
+        -- googleAnalytics.logEvent( "userAction", "toggle off", optionsMenu.options[self.id].label  )
        
 
       end
@@ -264,7 +264,7 @@ optionsMenu:insert(optionBlackAndWhiteText)
 
 }
   function optionsMenu:activate()
-  	googleAnalytics.logEvent( "userAction", "button press", "menu activate" )
+  	-- googleAnalytics.logEvent( "userAction", "button press", "menu activate" )
     if (extendedPurchased == true) then 
       transition.to(self, {time = 500, alpha = 1.0})
     else 
@@ -298,7 +298,7 @@ optionsMenu:insert(optionBlackAndWhiteText)
   end
   function optionsMenu:deactivate()
   	transition.to(self, {time = 500, alpha = 0.0})
-    googleAnalytics.logEvent( "userAction", "button press", "menu deactivated" )
+    -- googleAnalytics.logEvent( "userAction", "button press", "menu deactivated" )
   	self.activated = false;
   end
 
@@ -341,11 +341,11 @@ optionsMenu:insert(optionBlackAndWhiteText)
     print('toggle')
     	if (self.options[self.selection].toggle == "off") then
     		self.options[self.selection].toggle = "on"
-        googleAnalytics.logEvent( "userAction", "toggle on", self.options[self.selection].label  )
+        -- googleAnalytics.logEvent( "userAction", "toggle on", self.options[self.selection].label  )
         self.options[self.selection].toggleBox.alpha = 1.0;
      	else
      		self.options[self.selection].toggle = "off"
-        googleAnalytics.logEvent( "userAction", "toggle off", self.options[self.selection].label  )
+        -- googleAnalytics.logEvent( "userAction", "toggle off", self.options[self.selection].label  )
          self.options[self.selection].toggleBox.alpha = minToggleBoxAlpha;
      	end
     	

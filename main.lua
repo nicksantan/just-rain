@@ -16,7 +16,7 @@ local Clock = require("Clock")
 local store = require( "store" )
 
 -- Load Google Analytics
-local googleAnalytics = require( "plugin.googleAnalytics" )
+-- local googleAnalytics = require( "plugin.googleAnalytics" )
 
 display.setStatusBar( display.HiddenStatusBar )
 mRand = math.random; -- without the (), this caches the random() function
@@ -154,7 +154,7 @@ local function transactionListener( event )
  
         elseif ( transaction.state == "cancelled" ) then
             -- Handle a cancelled transaction here
-            googleAnalytics.logEvent( "userAction", "button press", "purchase cancelled" )
+            -- googleAnalytics.logEvent( "userAction", "button press", "purchase cancelled" )
  
         elseif ( transaction.state == "failed" ) then
             -- Handle a failed transaction here
@@ -176,7 +176,7 @@ end
 store.init( transactionListener )
 
 -- Initialize Google Analytics
-googleAnalytics.init( "justrainandroid", "UA-116723846-1" )
+-- googleAnalytics.init( "justrainandroid", "UA-116723846-1" )
 
 local productIdentifiers = {
     "extendedfeatures"
@@ -216,7 +216,7 @@ timer.performWithDelay( 1000, loadProds )
       else
         local alert = native.showAlert( "Purchases are disabled", "In-App Purchases are currently disabled on your device.", { "OK"}, onComplete )
       end
-      googleAnalytics.logEvent( "userAction", "button press", "purchase extended features" )
+      -- googleAnalytics.logEvent( "userAction", "button press", "purchase extended features" )
       elseif (readPurchase()) then
         optionsMenuScreen:activateOptions();
         extendedPurchased = true;
@@ -537,7 +537,7 @@ local function manageAutoDim()
   if (optionsMenuScreen.options[4].toggle == "on") then
     if (timeSinceLastInteraction > (60*5)) then
         if (screenDimmed == false) then
-          googleAnalytics.logEvent( "appAction", "screen dim")
+          -- googleAnalytics.logEvent( "appAction", "screen dim")
           dimBg.alpha = 0.8;
           screenDimmed = true;
         end
@@ -564,7 +564,7 @@ local function manageSleepTimer()
       print(os.time() - timeSleepTimerSet)
     local timeSinceSleepTimerSet = os.time() - timeSleepTimerSet;
     if (timeSinceSleepTimerSet > 60*60) then
-    googleAnalytics.logEvent( "appAction", "sleep timer quit")
+    -- googleAnalytics.logEvent( "appAction", "sleep timer quit")
      native.requestExit()
   
     end
@@ -933,7 +933,7 @@ end
     transition.to(menuText,{time=2000, delay=20000, alpha=0.0});
     -- transition.to(settingsPrompt,{time=1000, delay=1000, alpha=1.0});
     -- transition.to(settingsPrompt,{time=1000, delay=8000, alpha=0.0});
-    optionsMenuScreen = OptionsMenu.new(googleAnalytics);
+    -- optionsMenuScreen = OptionsMenu.new(googleAnalytics);
    
 
     dimBg = display.newRect(0,0,2920,1080)

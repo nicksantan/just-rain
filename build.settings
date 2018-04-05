@@ -50,11 +50,7 @@ settings =
         ["plugin.google.iap.v3"] =
         {
             publisherId = "com.coronalabs"
-        },
-        ["plugin.googleAnalytics"] =
-        {
-            publisherId = "com.coronalabs"
-        },
+        }
     },
         android =
         {  
