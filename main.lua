@@ -933,7 +933,7 @@ end
     transition.to(menuText,{time=2000, delay=20000, alpha=0.0});
     -- transition.to(settingsPrompt,{time=1000, delay=1000, alpha=1.0});
     -- transition.to(settingsPrompt,{time=1000, delay=8000, alpha=0.0});
-    -- optionsMenuScreen = OptionsMenu.new(googleAnalytics);
+    optionsMenuScreen = OptionsMenu.new(null);
    
 
     dimBg = display.newRect(0,0,2920,1080)
