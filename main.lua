@@ -140,35 +140,38 @@ local function transactionListener( event )
         print( transaction.errorType )
         print( transaction.errorString )
     else
-        -- No errors; proceed
-        if ( transaction.state == "purchased" or transaction.state == "restored" ) then
-            -- Handle a normal purchase or restored purchase here
-            print( transaction.state )
-            print( transaction.productIdentifier )
-            print( transaction.date )
-            if (transaction.productIdentifier == "extendedfeatures") then
-              extendedPurchased = true;
-              optionsMenuScreen:activateOptions();
-              writePurchase();
-            end
- 
-        elseif ( transaction.state == "cancelled" ) then
-            -- Handle a cancelled transaction here
-            -- googleAnalytics.logEvent( "userAction", "button press", "purchase cancelled" )
- 
-        elseif ( transaction.state == "failed" ) then
-            -- Handle a failed transaction here
-            if transaction.productIdentifier == "extendedfeatures" then
-              if (readPurchase()) then
-                extendedPurchased = true;
-              end
-            end
+    -- No errors; proceed
+    if ( transaction.state == "purchased" or transaction.state == "restored" ) then
+        -- Handle a normal purchase or restored purchase here
+        print( transaction.state )
+        print( transaction.productIdentifier )
+        print( transaction.date )
+        if (transaction.productIdentifier == "extendedfeatures") then
+          extendedPurchased = true;
+          optionsMenuScreen:activateOptions();
+          writePurchase();
         end
- 
-        -- Tell the store that the transaction is complete
-        -- If you're providing downloadable content, do not call this until the download has completed
-        store.finishTransaction( transaction )
+
+    elseif ( transaction.state == "cancelled" ) then
+        -- Handle a cancelled transaction here
+        -- googleAnalytics.logEvent( "userAction", "button press", "purchase cancelled" )
+
+    elseif ( transaction.state == "failed" ) then
+        -- Handle a failed transaction here
+        print("transaction failed")
+         print( transaction.errorType )
+        print( transaction.errorString )
+        if transaction.productIdentifier == "extendedfeatures" then
+          if (readPurchase()) then
+            extendedPurchased = true;
+          end
+        end
     end
+
+    -- Tell the store that the transaction is complete
+    -- If you're providing downloadable content, do not call this until the download has completed
+    store.finishTransaction( transaction )
+end
 end
  
 -- Initialize store
@@ -211,16 +214,23 @@ timer.performWithDelay( 1000, loadProds )
       print("is store active?")
       print(store.isActive);
       if (store.isActive) then
+        print("can we make purchases?")
+        print (store.canMakePurchases)
         if (store.canMakePurchases) then
-        store.purchase( "extendedfeatures")
-      else
-        local alert = native.showAlert( "Purchases are disabled", "In-App Purchases are currently disabled on your device.", { "OK"}, onComplete )
-      end
+          print("okay, proceeding with purchase")
+          store.purchase( {"extendedfeatures"})
+
+        else
+          print("purchases are disabled")
+          local alert = native.showAlert( "Purchases are disabled", "In-App Purchases are currently disabled on your device.", { "OK"}, onComplete )
+        end
       -- googleAnalytics.logEvent( "userAction", "button press", "purchase extended features" )
       elseif (readPurchase()) then
         optionsMenuScreen:activateOptions();
         extendedPurchased = true;
+        print("successfully read local file")
       else 
+        print("no network connection, we guess")
         local alert = native.showAlert( "No network connection", "Couldn't connect to the iTunes Store. Please check your internet connection.", { "OK"}, onComplete )
       end
         
@@ -721,7 +731,7 @@ for i = 1, rainRate do
     drop.endValue = mRand(h-180,h-20);
     drop.alpha = 0.8;
     sourcePan = rainDirection / 2.5;
-    drop.x = mRand(-320,w+300) - sourcePan;
+    drop.x = mRand(-520,w+500) - sourcePan;
     drop.y = 0;
     
     drop.collision = onLocalCollision
