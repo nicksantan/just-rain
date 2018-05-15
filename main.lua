@@ -58,6 +58,9 @@ local w = 1024;
 local h = 768;
 local debugText;
 
+if audio.supportsSessionProperty == true then 
+    audio.setSessionProperty(audio.MixMode, audio.MediaPlaybackMixMode) 
+end 
 --load sprites here
 
 --load sfx here
