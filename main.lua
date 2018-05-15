@@ -204,10 +204,13 @@ end
 local function loadProds( event )
     print( "listener called" )
     store.loadProducts( productIdentifiers, productListener )
+    if (readPurchase()) then
+      extendedPurchased = true;
+    end
     -- timer.performWithDelay( 1000, restorePurchases )
 end
   
-timer.performWithDelay( 1000, loadProds )
+timer.performWithDelay( 500, loadProds )
 
 
 
