@@ -206,6 +206,7 @@ local function loadProds( event )
     store.loadProducts( productIdentifiers, productListener )
     if (readPurchase()) then
       extendedPurchased = true;
+      optionsMenuScreen:activateOptions();
     end
     -- timer.performWithDelay( 1000, restorePurchases )
 end
