@@ -69,9 +69,9 @@ local backPrompt = display.newGroup();
     purchaseHotZone:setFillColor(255,255,255);
     purchaseHotZone.alpha = 0.0;
     purchaseHotZone.isHitTestable = true;
-    if (extendedPurchased == true) then
+    
 purchaseHotZone.isHitTestable = false;
-  end
+
 
     -- local selectIcon = display.newImage("ouyaselect.png", 150,800)
     -- local selectText = display.newText("SELECT",200,789, "Knockout-HTF29-JuniorLiteweight", 40)
@@ -80,7 +80,7 @@ purchaseHotZone.isHitTestable = false;
     -- purchaseIcon.x = display.screenOriginX + display.actualContentWidth;
 
 
-    local purchaseText = display.newText("Purchase Extended Features", display.actualContentWidth - 560, 649, "Knockout-HTF29-JuniorLiteweight", 40)
+    local purchaseText = display.newText("Purchase / Restore Extended Features", display.actualContentWidth - 560, 649, "Knockout-HTF29-JuniorLiteweight", 40)
     purchaseText:setReferencePoint(display.TopRightReferencePoint)
     purchaseText.x = display.screenOriginX + display.actualContentWidth - 50;
   
@@ -100,11 +100,28 @@ end
     backPrompt:insert(purchaseHotZone);
     -- backPrompt:insert(purchaseIcon);
     backPrompt:insert(purchaseText)
-   
+   -- Handler that gets notified when the alert closes
+local function purchaseAlertComplete( event )
+    if ( event.action == "clicked" ) then
+        local i = event.index
+        if ( i == 1 ) then
+          purchaseItem();
+            -- Do nothing; dialog will simply dismiss
+        elseif ( i == 2 ) then
+            -- Open URL if "Learn More" (second button) was clicked
+           store.restore();
+        end
+    end
+end
+  
+-- Show alert with two buttons
+
+
  local function purchaseTouch(self, event)
     if (event.phase == "began") then
+    local alert = native.showAlert( "Just Rain", "Would you like to purchase or restore Just Rain Extended Features?", { "Purchase", "Restore" }, purchaseAlertComplete )
 
-    purchaseItem();
+    
 end
    end
       purchaseHotZone.touch = purchaseTouch;

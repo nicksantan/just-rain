@@ -1,7 +1,7 @@
 ---------- Declare libraries and globals ----------
 
 -- Extended purchase flag (set and stored locally upon purchase so people don't have to be online to access stuff they bought)
-extendedPurchased = false; 
+extendedPurchased = true; 
 
 
 local timeSleepTimerSet = os.time();
@@ -204,7 +204,7 @@ end
 local function loadProds( event )
     print( "listener called" )
     store.loadProducts( productIdentifiers, productListener )
-    timer.performWithDelay( 1000, restorePurchases )
+    -- timer.performWithDelay( 1000, restorePurchases )
 end
   
 timer.performWithDelay( 1000, loadProds )
