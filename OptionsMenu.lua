@@ -67,10 +67,10 @@ local backPrompt = display.newGroup();
  -- backPrompt.alpha = 1.0;
     local purchaseHotZone = display.newRect(display.actualContentWidth-600, display.contentHeight - 200, 600, 200);
     purchaseHotZone:setFillColor(255,255,255);
-    purchaseHotZone.alpha = 0.0;
-    purchaseHotZone.isHitTestable = true;
+    purchaseHotZone.alpha = 0;
+    -- purchaseHotZone.isHitTestable = true;
     
-purchaseHotZone.isHitTestable = false;
+    purchaseHotZone.isHitTestable = true;
 
 
     -- local selectIcon = display.newImage("ouyaselect.png", 150,800)
@@ -118,6 +118,7 @@ end
 
 
  local function purchaseTouch(self, event)
+  print("HAPPENED")
     if (event.phase == "began") then
     local alert = native.showAlert( "Just Rain", "Would you like to purchase or restore Just Rain Extended Features?", { "Purchase", "Restore" }, purchaseAlertComplete )
 
@@ -311,7 +312,7 @@ optionsMenu:insert(optionBlackAndWhiteText)
         end
       end
       purchaseText.alpha = 0;
-      purchaseText.isHitTestable = false;
+      purchaseHotZone.isHitTestable = false;
   end
   function optionsMenu:deactivate()
   	transition.to(self, {time = 500, alpha = 0.0})
