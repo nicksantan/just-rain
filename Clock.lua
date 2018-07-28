@@ -21,8 +21,7 @@ function Clock.new()
   
   clock:insert(timeDisplay);
   clock:insert(dateDisplay)
-  local date = string.upper(os.date("%A %B %d"))
-  dateDisplay.text = date;
+
   function clock:update(onOrOff)
     -- print(onOrOff)
     if (onOrOff == "on") then
@@ -39,6 +38,9 @@ function Clock.new()
     
     
     timeDisplay.text = hour..":"..minute;
+
+    local date = string.upper(os.date("%A %B %d"))
+    dateDisplay.text = date;
   end
 
   return clock

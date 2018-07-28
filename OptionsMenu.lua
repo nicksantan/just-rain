@@ -72,6 +72,16 @@ local backPrompt = display.newGroup();
     
     purchaseHotZone.isHitTestable = true;
 
+       local restoreHotZone = display.newRect(display.actualContentWidth/2, display.contentHeight - 150, 400, 150);
+    restoreHotZone:setFillColor(255,255,255);
+
+    restoreHotZone.x = display.screenOriginX + display.actualContentWidth/2 
+      restoreHotZone:setReferencePoint(display.TopCenterReferencePoint)
+    restoreHotZone.alpha = 0;
+    -- restoreHotZone.isHitTestable = true;
+    
+    restoreHotZone.isHitTestable = true;
+
 
     -- local selectIcon = display.newImage("ouyaselect.png", 150,800)
     -- local selectText = display.newText("SELECT",200,789, "Knockout-HTF29-JuniorLiteweight", 40)
@@ -80,9 +90,13 @@ local backPrompt = display.newGroup();
     -- purchaseIcon.x = display.screenOriginX + display.actualContentWidth;
 
 
-    local purchaseText = display.newText("Purchase / Restore Extended Features", display.actualContentWidth - 560, 649, "Knockout-HTF29-JuniorLiteweight", 40)
+    local purchaseText = display.newText("Purchase Extended Features", display.actualContentWidth - 560, 649, "Knockout-HTF29-JuniorLiteweight", 40)
     purchaseText:setReferencePoint(display.TopRightReferencePoint)
     purchaseText.x = display.screenOriginX + display.actualContentWidth - 50;
+
+      local restoreText = display.newText("Restore Extended Features", display.actualContentWidth - 560, 649, "Knockout-HTF29-JuniorLiteweight", 40)
+    restoreText:setReferencePoint(display.TopCenterReferencePoint)
+    restoreText.x = display.screenOriginX + display.actualContentWidth/2 
   
 
  if (extendedPurchased == true) then
@@ -91,6 +105,10 @@ purchaseText.alpha = 0;
 purchaseHotZone.alpha = 0;
 purchaseHotZone.isHitTestable = false;
 
+restoreText.alpha = 0
+restoreHotZone.alpha = 0
+restoreHotZone.isHitTestable = false;
+
 end
 
 
@@ -98,8 +116,9 @@ end
     backPrompt:insert(backText);
     backPrompt:insert(backHotZone);
     backPrompt:insert(purchaseHotZone);
-    -- backPrompt:insert(purchaseIcon);
     backPrompt:insert(purchaseText)
+    backPrompt:insert(restoreHotZone);
+    backPrompt:insert(restoreText)
    -- Handler that gets notified when the alert closes
 local function purchaseAlertComplete( event )
     if ( event.action == "clicked" ) then
@@ -117,16 +136,38 @@ end
 -- Show alert with two buttons
 
 
- local function purchaseTouch(self, event)
+local function purchaseTouch(self, event)
   print("HAPPENED")
-    if (event.phase == "began") then
-    local alert = native.showAlert( "Just Rain", "Would you like to purchase or restore Just Rain Extended Features?", { "Purchase", "Restore" }, purchaseAlertComplete )
-
-    
+  if (event.phase == "began") then
+    purchaseItem();
+    -- local alert = native.showAlert( "Just Rain", "Would you like to purchase or restore Just Rain Extended Features?", { "Purchase", "Restore" }, purchaseAlertComplete )
+  end
 end
-   end
-      purchaseHotZone.touch = purchaseTouch;
- purchaseHotZone:addEventListener( "touch",  purchaseHotZone )
+
+purchaseHotZone.touch = purchaseTouch;
+purchaseHotZone:addEventListener( "touch",  purchaseHotZone )
+
+local function restoreTouch(self, event)
+  print("HAPPENED")
+  if (event.phase == "began") then
+     print("is store active?")
+      print(store.isActive);
+      if (store.isActive) then
+         store.restore();
+         local alert = native.showAlert( "Purchases restored", "Your purchases have successfully been restored.", { "OK"}, onComplete )
+      else 
+        print("no network connection, we guess")
+        local alert = native.showAlert( "No network connection", "Couldn't connect to the iTunes Store. Please check your internet connection.", { "OK"}, onComplete )
+      end
+        
+   
+
+
+  end
+end
+
+restoreHotZone.touch = restoreTouch;
+restoreHotZone:addEventListener( "touch",  restoreHotZone )
 
    local function backTouch(self, event)
     if (event.phase == "began") then

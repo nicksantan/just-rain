@@ -1,7 +1,7 @@
 ---------- Declare libraries and globals ----------
 
 -- Extended purchase flag (set and stored locally upon purchase so people don't have to be online to access stuff they bought)
-extendedPurchased = false; 
+extendedPurchased = true; 
 
 
 local timeSleepTimerSet = os.time();
@@ -953,7 +953,7 @@ end
     optionsMenuScreen = OptionsMenu.new(null);
    
 
-    dimBg = display.newRect(0,0,2920,1080)
+    dimBg = display.newRect(0,0,3400,1080)
     dimBg:setFillColor(0,0,0);
     dimBg.alpha = 0;
     dimBg.x = display.screenOriginX;
