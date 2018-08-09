@@ -1,7 +1,7 @@
 ---------- Declare libraries and globals ----------
 
 -- Extended purchase flag (set and stored locally upon purchase so people don't have to be online to access stuff they bought)
-extendedPurchased = true; 
+extendedPurchased = false; 
 
 
 local timeSleepTimerSet = os.time();

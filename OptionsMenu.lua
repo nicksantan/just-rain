@@ -354,6 +354,8 @@ optionsMenu:insert(optionBlackAndWhiteText)
       end
       purchaseText.alpha = 0;
       purchaseHotZone.isHitTestable = false;
+      restoreText.alpha = 0;
+      restoreHotZone.isHitTestable = false;
   end
   function optionsMenu:deactivate()
   	transition.to(self, {time = 500, alpha = 0.0})
