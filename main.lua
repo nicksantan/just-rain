@@ -57,6 +57,7 @@ local ouyaYVelocity= 0;
 local w = 1024;
 local h = 768;
 local debugText;
+local nonText;
 
 if audio.supportsSessionProperty == true then 
     audio.setSessionProperty(audio.MixMode, audio.MediaPlaybackMixMode) 
