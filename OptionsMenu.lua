@@ -2,10 +2,14 @@
 --A class for the main Just Rain options menu
 
 module(..., package.seeall)
+local translations;
+-- local language =  userDefinedLanguage or system.getPreference("ui", "language")
+local language;
+local store_string;
 -- local extendedPurchased = false;
 local OptionsMenu = {}
  
-function OptionsMenu.new(analytics)
+function OptionsMenu.new(analytics, the_language, the_translations, the_store_string)
   -- local extendedPurchased = extended;
   local optionsMenu = display.newGroup();
   local bg = display.newRect(600,400,display.actualContentWidth,display.actualContentHeight)
@@ -14,6 +18,9 @@ function OptionsMenu.new(analytics)
   local textYStart = 80;
   local textYSpacing = 70;
   local textXStart = 50;
+  store_string = the_store_string;
+  language = the_language;
+  translations = the_translations
   -- googleAnalytics = analytics
   bg:setReferencePoint(display.centerReferencePoint);
   bg.x = display.contentCenterX
@@ -61,7 +68,7 @@ local backPrompt = display.newGroup();
     -- local selectIcon = display.newImage("ouyaselect.png", 150,800)
     -- local selectText = display.newText("SELECT",200,789, "Knockout-HTF29-JuniorLiteweight", 40)
     local backIcon = display.newImage("amazonback.png",display.screenOriginX + 50,650)
-    local backText = display.newText("Back", display.screenOriginX + 100, 649, "Knockout-HTF29-JuniorLiteweight", 40)
+    local backText = display.newText(translations["Back"][language], display.screenOriginX + 100, 649, "Knockout-HTF29-JuniorLiteweight", 40)
   
 
  -- backPrompt.alpha = 1.0;
@@ -97,7 +104,11 @@ local backPrompt = display.newGroup();
       local restoreText = display.newText("Restore Extended Features", display.actualContentWidth - 560, 649, "Knockout-HTF29-JuniorLiteweight", 40)
     restoreText:setReferencePoint(display.TopCenterReferencePoint)
     restoreText.x = display.screenOriginX + display.actualContentWidth/2 
-  
+    
+    if (system.getInfo("platform") == "android") then
+      restoreText.alpha = 0;
+      restoreHotZone.isHitTestable = false;
+    end
 
  if (extendedPurchased == true) then
 -- purchaseIcon.alpha = 0;
@@ -157,7 +168,7 @@ local function restoreTouch(self, event)
          local alert = native.showAlert( "Purchases restored", "Your purchases have successfully been restored.", { "OK"}, onComplete )
       else 
         print("no network connection, we guess")
-        local alert = native.showAlert( "No network connection", "Couldn't connect to the iTunes Store. Please check your internet connection.", { "OK"}, onComplete )
+        local alert = native.showAlert( "No network connection", "Couldn't connect to " .. store_string .. ". Please check your internet connection.", { "OK"}, onComplete )
       end
         
    
@@ -188,7 +199,7 @@ return true
   
   optionsMenu:insert(backPrompt);
 
-    local muteSoundText = display.newText("Mute Sounds", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
+    local muteSoundText = display.newText(translations["Mute Sounds"][language], 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
   muteSoundText:setReferencePoint(display.TopLeftReferencePoint);
   muteSoundText.alpha = 1.0;
   muteSoundText.x = textXStart;
@@ -203,7 +214,7 @@ return true
 muteSoundToggleBox:addEventListener( "touch", muteSoundToggleBox )
 
 
-  local optionClockText = display.newText("Clock", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
+  local optionClockText = display.newText(translations["Clock"][language], 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
   optionClockText:setReferencePoint(display.TopLeftReferencePoint);
   optionClockText.alpha = minTextAlpha;
   optionClockText.x = textXStart;
@@ -221,7 +232,7 @@ muteSoundToggleBox:addEventListener( "touch", muteSoundToggleBox )
   optionClockToggleBox.touch = onToggleTouch
 optionClockToggleBox:addEventListener( "touch", optionClockToggleBox )
 
-   local optionWanderText =  display.newText("Wander Mode (rain changes direction and intensity over time)", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
+   local optionWanderText =  display.newText(translations["Wander Mode"][language], 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
   optionWanderText:setReferencePoint(display.TopLeftReferencePoint);
   optionWanderText.alpha = minTextAlpha;
     optionWanderText.x = textXStart;
@@ -237,7 +248,7 @@ optionClockToggleBox:addEventListener( "touch", optionClockToggleBox )
    optionTwoToggleBox.touch = onToggleTouch
 optionTwoToggleBox:addEventListener( "touch", optionTwoToggleBox )
 
-   local optionAutoDimText = display.newText("Auto-dim after 5 minutes of inactivity", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
+   local optionAutoDimText = display.newText(translations["Auto-dim"][language], 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
   optionAutoDimText:setReferencePoint(display.TopLeftReferencePoint);
   optionAutoDimText.alpha = minTextAlpha;
   optionAutoDimText.x = textXStart;
@@ -251,7 +262,7 @@ optionTwoToggleBox:addEventListener( "touch", optionTwoToggleBox )
     optionThreeToggleBox.touch = onToggleTouch
 optionThreeToggleBox:addEventListener( "touch", optionThreeToggleBox )
 
-local optionExtraThunderText = display.newText("Extra Thunder", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
+local optionExtraThunderText = display.newText(translations["Extra Thunder"][language], 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
 optionExtraThunderText:setReferencePoint(display.TopLeftReferencePoint);
 optionExtraThunderText.alpha = minTextAlpha;
 optionExtraThunderText.x = textXStart;
@@ -266,7 +277,7 @@ optionFourToggleBox.id = 5;
 optionFourToggleBox.touch = onToggleTouch
 optionFourToggleBox:addEventListener( "touch", optionFourToggleBox )
 
-local optionSleepTimerText = display.newText("Sleep Timer (App will shut off after one hour)", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
+local optionSleepTimerText = display.newText(translations["Sleep Timer"][language], 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
 optionSleepTimerText:setReferencePoint(display.TopLeftReferencePoint);
 optionSleepTimerText.alpha = minTextAlpha;
 optionSleepTimerText.x = textXStart;
@@ -281,7 +292,7 @@ optionFiveToggleBox.id = 6;
 optionFiveToggleBox.touch = onToggleTouch
 optionFiveToggleBox:addEventListener( "touch", optionFiveToggleBox )
 
-local optionBlackAndWhiteText = display.newText("Monochrome Mode", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
+local optionBlackAndWhiteText = display.newText(translations["Monochrome mode"][language], 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
 optionBlackAndWhiteText:setReferencePoint(display.TopLeftReferencePoint);
 optionBlackAndWhiteText.alpha = minTextAlpha;
 optionBlackAndWhiteText.x = textXStart;

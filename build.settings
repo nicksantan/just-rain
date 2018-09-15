@@ -19,9 +19,11 @@ settings =
             xcassets = "Images.xcassets",
             plist =
             {
-              
-         
-
+              CFBundleLocalizations = 
+                {
+                    "English",
+                    "Chinese"
+                },
             }
         },
         plugins =

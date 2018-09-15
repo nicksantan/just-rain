@@ -1,5 +1,22 @@
 ---------- Declare libraries and globals ----------
 
+-- Load translations module locally
+local translations = require("translations")
+
+-- Get the user's defined language (if any) or the device's default language
+local platform = system.getInfo( "platform" )
+print (platform)
+local store_string = "the iTunes Store"
+if platform == "android" then
+  store_string = "Google Play"
+end
+
+local language =  userDefinedLanguage or system.getPreference("ui", "language")
+-- local language = "cn"
+-- Other localization-related system properties:
+-- system.getPreference("locale", "country")
+-- system.getPreference("locale", "identifier")
+-- system.getPreference("locale", "language")
 -- Extended purchase flag (set and stored locally upon purchase so people don't have to be online to access stuff they bought)
 extendedPurchased = false; 
 
@@ -239,7 +256,7 @@ timer.performWithDelay( 500, loadProds )
         print("successfully read local file")
       else 
         print("no network connection, we guess")
-        local alert = native.showAlert( "No network connection", "Couldn't connect to the iTunes Store. Please check your internet connection.", { "OK"}, onComplete )
+        local alert = native.showAlert( "No network connection", "Couldn't connect to " .. store_string .. ". Please check your internet connection.", { "OK"}, onComplete )
       end
         
     
@@ -924,7 +941,7 @@ end
     settingsPrompt = display.newGroup();
     settingsPrompt.alpha = 1.0;
 
-    local instructionsText = display.newText("Touch the screen to change the intensity and direction of the rain.", display.contentCenterX, 649, "Knockout-HTF29-JuniorLiteweight", 40)
+    local instructionsText = display.newText(translations["Intro Text"][language], display.contentCenterX, 649, "Knockout-HTF29-JuniorLiteweight", 40)
    -- local menuText = display.newText("Click your remote for more options.", 1080/2, 1920/2, "Knockout-HTF29-JuniorLiteweight", 40)
     instructionsText:setReferencePoint(display.centerReferencePoint);
     instructionsText.x = display.contentCenterX
@@ -938,7 +955,7 @@ end
     transition.to(instructionsText,{time=2000, delay=6000, alpha=1.0});
     transition.to(instructionsText,{time=2000, delay=13000, alpha=0.0});
     local menuIcon = display.newImage("amazonmenu.png",display.screenOriginX + 50,650)
-    local menuText = display.newText("Tap this corner to access menu", display.screenOriginX + 100, 649, "Knockout-HTF29-JuniorLiteweight", 40)
+    local menuText = display.newText(translations["Menu Prompt"][language], display.screenOriginX + 100, 649, "Knockout-HTF29-JuniorLiteweight", 40)
     menuIcon.alpha = 0
     menuText.alpha = 0
     transition.to(menuIcon,{time=2000, delay=15000, alpha=1.0});
@@ -951,7 +968,7 @@ end
     transition.to(menuText,{time=2000, delay=20000, alpha=0.0});
     -- transition.to(settingsPrompt,{time=1000, delay=1000, alpha=1.0});
     -- transition.to(settingsPrompt,{time=1000, delay=8000, alpha=0.0});
-    optionsMenuScreen = OptionsMenu.new(null);
+    optionsMenuScreen = OptionsMenu.new(null, language, translations, store_string);
    
 
     dimBg = display.newRect(0,0,3400,1080)
