@@ -92,6 +92,95 @@ local translations =
 		["zh-Hant"] = "轻触屏幕角落打开菜单",
 	},
 
+	["Restored Long"] =
+	{
+		["en"] = "Your purchases have successfully been restored.",
+		["cn"] = "您所购买的内容已被恢复",
+		["zh"] = "您所购买的内容已被恢复",
+		["zh-Hans"] = "您所购买的内容已被恢复",
+		["zh-Hant"] = "您所购买的内容已被恢复",
+	},
+
+	["Restored"] =
+	{
+		["en"] = "Purchases restored",
+		["cn"] = "购买内容已被恢复",
+		["zh"] = "购买内容已被恢复",
+		["zh-Hans"] = "购买内容已被恢复",
+		["zh-Hant"] = "购买内容已被恢复",
+	},
+
+	["No network connection"] =
+	{
+		["en"] = "No network connection",
+		["cn"] = "无法连接到网络",
+		["zh"] = "无法连接到网络",
+		["zh-Hans"] = "无法连接到网络",
+		["zh-Hant"] = "无法连接到网络",
+	},
+
+	["OK"] =
+	{
+		["en"] = "OK",
+		["cn"] = "确认",
+		["zh"] = "确认",
+		["zh-Hans"] = "确认",
+		["zh-Hant"] = "确认",
+	},
+
+	["Purchase Extended Features"] =
+	{
+		["en"] = "Purchase Extended Features",
+		["cn"] = "购买扩展功能",
+		["zh"] = "购买扩展功能",
+		["zh-Hans"] = "购买扩展功能",
+		["zh-Hant"] = "购买扩展功能",
+	},
+
+	["Restore Extended Features"] =
+	{
+		["en"] = "Restore Extended Features",
+		["cn"] = "恢复扩展功能",
+		["zh"] = "恢复扩展功能",
+		["zh-Hans"] = "恢复扩展功能",
+		["zh-Hant"] = "恢复扩展功能",
+	},
+
+	["Purchases are disabled"] =
+	{
+		["en"] = "Purchases are disabled",
+		["cn"] = "购买功能已禁用",
+		["zh"] = "购买功能已禁用",
+		["zh-Hans"] = "购买功能已禁用",
+		["zh-Hant"] = "购买功能已禁用",
+	},
+
+	["In-App Disabled"] =
+	{
+		["en"] = "In-App Purchases are currently disabled on your device.",
+		["cn"] = "应用内购买功能已在本设备中禁用",
+		["zh"] = "应用内购买功能已在本设备中禁用",
+		["zh-Hans"] = "应用内购买功能已在本设备中禁用",
+		["zh-Hant"] = "应用内购买功能已在本设备中禁用",
+	},
+
+	["No_connect_1"] =
+	{
+		["en"] = "Couldn't connect to",
+		["cn"] = "无法连接到",
+		["zh"] = "无法连接到",
+		["zh-Hans"] = "无法连接到",
+		["zh-Hant"] = "无法连接到",
+	},
+
+	["No_connect_2"] =
+	{
+		["en"] = ". Please check your internet connection.",
+		["cn"] = "。请检查您的网络连接",
+		["zh"] = "。请检查您的网络连接",
+		["zh-Hans"] = "。请检查您的网络连接",
+		["zh-Hant"] = "。请检查您的网络连接",
+	},
 }
  
 return translations

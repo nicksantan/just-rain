@@ -97,11 +97,11 @@ local backPrompt = display.newGroup();
     -- purchaseIcon.x = display.screenOriginX + display.actualContentWidth;
 
 
-    local purchaseText = display.newText("Purchase Extended Features", display.actualContentWidth - 560, 649, "Knockout-HTF29-JuniorLiteweight", 40)
+    local purchaseText = display.newText(translations["Purchase Extended Features"][language], display.actualContentWidth - 560, 649, "Knockout-HTF29-JuniorLiteweight", 40)
     purchaseText:setReferencePoint(display.TopRightReferencePoint)
     purchaseText.x = display.screenOriginX + display.actualContentWidth - 50;
 
-      local restoreText = display.newText("Restore Extended Features", display.actualContentWidth - 560, 649, "Knockout-HTF29-JuniorLiteweight", 40)
+      local restoreText = display.newText(translations["Restore Extended Features"][language], display.actualContentWidth - 560, 649, "Knockout-HTF29-JuniorLiteweight", 40)
     restoreText:setReferencePoint(display.TopCenterReferencePoint)
     restoreText.x = display.screenOriginX + display.actualContentWidth/2 
     
@@ -165,10 +165,10 @@ local function restoreTouch(self, event)
       print(store.isActive);
       if (store.isActive) then
          store.restore();
-         local alert = native.showAlert( "Purchases restored", "Your purchases have successfully been restored.", { "OK"}, onComplete )
+         local alert = native.showAlert( translations["Restored"][language], translations["Restored long"][language], {translations["OK"][language]}, onComplete )
       else 
         print("no network connection, we guess")
-        local alert = native.showAlert( "No network connection", "Couldn't connect to " .. store_string .. ". Please check your internet connection.", { "OK"}, onComplete )
+        local alert = native.showAlert( translations["No network connection"][language], translations["No_connect_1"][language] .. store_string .. translations["No_connect_2"][language], {translations["OK"][language]}, onComplete )
       end
         
    

@@ -12,7 +12,7 @@ if platform == "android" then
 end
 
 local language =  userDefinedLanguage or system.getPreference("ui", "language")
--- local language = "cn"
+local language = "cn"
 -- Other localization-related system properties:
 -- system.getPreference("locale", "country")
 -- system.getPreference("locale", "identifier")
@@ -247,7 +247,7 @@ timer.performWithDelay( 500, loadProds )
 
         else
           print("purchases are disabled")
-          local alert = native.showAlert( "Purchases are disabled", "In-App Purchases are currently disabled on your device.", { "OK"}, onComplete )
+          local alert = native.showAlert(translations["Purchases are disabled"][language], translations["In-App Disabled"][language], {translations["OK"][language]}, onComplete )
         end
       -- googleAnalytics.logEvent( "userAction", "button press", "purchase extended features" )
       elseif (readPurchase()) then
@@ -256,7 +256,7 @@ timer.performWithDelay( 500, loadProds )
         print("successfully read local file")
       else 
         print("no network connection, we guess")
-        local alert = native.showAlert( "No network connection", "Couldn't connect to " .. store_string .. ". Please check your internet connection.", { "OK"}, onComplete )
+        local alert = native.showAlert( translations["No network connection"][language], translations["No_connect_1"][language] .. store_string .. translations["No_connect_2"][language], {translations["OK"][language]}, onComplete )
       end
         
     
