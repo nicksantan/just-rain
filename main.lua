@@ -11,8 +11,28 @@ if platform == "android" then
   store_string = "Google Play"
 end
 
+
+local supported_langs = {"en","en-US","cn","zh","zh-Hans","zh-Hant"}
+
+local function has_value (tab, val)
+    for index, value in ipairs(tab) do
+        if value == val then
+            return true
+        end
+    end
+
+    return false
+end
+
+
 local language =  userDefinedLanguage or system.getPreference("ui", "language")
-local language = "cn"
+print(language)
+
+if has_value(supported_langs, language) then
+  -- do nothing
+else 
+ language = "en"
+end
 -- Other localization-related system properties:
 -- system.getPreference("locale", "country")
 -- system.getPreference("locale", "identifier")
