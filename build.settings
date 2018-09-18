@@ -2,7 +2,7 @@ settings =
 {
          splashScreen = 
         {
-            enable = true,
+            enable = false,
             image = "crappy-robysoft-logo.jpg"
         },
         orientation =
@@ -19,6 +19,7 @@ settings =
             xcassets = "Images.xcassets",
             plist =
             {
+              UILaunchStoryboardName = "LaunchScreen",  -- Required!  
               CFBundleLocalizations = 
                 {
                     "English",
