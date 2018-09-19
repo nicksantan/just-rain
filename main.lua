@@ -948,7 +948,7 @@ end
     --create the clock
     theClock = Clock.new();
 
-     titleScreen = display.newImageRect("title.png",1500,800);
+     titleScreen = display.newImage("title-trimmed.png");
     titleScreen:setReferencePoint(display.CenterReferencePoint);
     titleScreen.x = w/2;
     -- titleScreen.x = 2;

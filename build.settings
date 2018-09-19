@@ -2,7 +2,7 @@ settings =
 {
          splashScreen = 
         {
-            enable = false,
+            enable = true,
             image = "crappy-robysoft-logo.jpg"
         },
         orientation =
