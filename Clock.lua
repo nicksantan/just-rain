@@ -13,9 +13,11 @@ function Clock.new()
   timeDisplay:setReferencePoint(display.bottomRightReferencePoint)
   timeDisplay.x = 1520;
   timeDisplay.y = 880;
+  timeDisplay.anchorX = 1.0
   dateDisplay:setReferencePoint(display.bottomRightReferencePoint)
-  dateDisplay.x = 1490;
+  dateDisplay.x = 1540;
   dateDisplay.y = 780;
+  dateDisplay.anchorX = 1.0
   local maxAlpha = 0.75;
 
   
@@ -23,6 +25,7 @@ function Clock.new()
   clock:insert(dateDisplay)
   local date = string.upper(os.date("%A %B %d"))
   dateDisplay.text = date;
+  dateDisplay.x = 1540;
   function clock:update(onOrOff)
     -- print(onOrOff)
     if (onOrOff == "on") then
@@ -39,6 +42,7 @@ function Clock.new()
     
     
     timeDisplay.text = hour..":"..minute;
+    timeDisplay.x = 1520;
   end
 
   return clock

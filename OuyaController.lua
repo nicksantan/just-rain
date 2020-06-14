@@ -43,6 +43,8 @@ local function ouyaListener( event )
 				e.buttonName = "a"
 	elseif (event.keyName == "m") then
 		e.buttonName = "menu"
+	elseif (event.keyName == "q") then
+		e.buttonName = "quit"
 	elseif (event.keyName == "s") then
 		e.buttonName = "center"
 	else

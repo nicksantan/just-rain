@@ -8,7 +8,7 @@ local OptionsMenu = {}
 function OptionsMenu.new()
   
   local optionsMenu = display.newGroup();
-  local bg = display.newRect(600,400,1400,400)
+  local bg = display.newRect(600,750,1400,450)
   local minTextAlpha = 1.0; -- was 0.6
   local minToggleBoxAlpha = 0.1;
   local textYStart = 300;
@@ -35,7 +35,7 @@ end
     optionsMenu:insert(backHotZone);
   bg:setReferencePoint(display.centerReferencePoint);
   bg.x = display.contentCenterX
-  bg.y = display.contentCenterY - 125;
+  bg.y = display.contentCenterY - 65;
   bg:setFillColor(0,0,0,255)
   bg.alpha = 0.8;
   bg.isHitTestable = true;
@@ -50,9 +50,21 @@ end
 local function onToggleTouch(self, event)
     if (event.phase == "began") then
     if (optionsMenu.options[self.id].toggle == "off") then
+      if (self.id == 7) then
+        timeSleepTimerSet = os.time();
+        print("SETTING TIME SLEEP TIMER SET")
+      end
+      
+      if (self.id == 5) then
+        native.setProperty( "windowMode", "fullScreen" )
+      end
+
       optionsMenu.options[self.id].toggle = "on"
       optionsMenu.options[self.id].toggleBox.alpha = 1.0;
     else
+      if (self.id == 5) then
+        native.setProperty( "windowMode", "normal" )
+      end
       optionsMenu.options[self.id].toggle = "off"
        optionsMenu.options[self.id].toggleBox.alpha = minToggleBoxAlpha;
     end
@@ -92,7 +104,7 @@ local backPrompt = display.newGroup();
   local optionClockToggleBox = display.newRect(1510,650,30,30);
   optionClockToggleBox:setReferencePoint(display.TopLeftReferencePoint);
   optionClockToggleBox.alpha = minToggleBoxAlpha;
-  optionClockToggleBox.y = textYStart + 20;
+  optionClockToggleBox.y = textYStart ;
   optionClockToggleBox.id = 1;
 
   optionClockToggleBox.touch = onToggleTouch
@@ -107,7 +119,7 @@ local backPrompt = display.newGroup();
     local optionTwoToggleBox = display.newRect(1510,670,30,30);
   optionTwoToggleBox:setReferencePoint(display.TopLeftReferencePoint);
   optionTwoToggleBox.alpha = minToggleBoxAlpha;
-  optionTwoToggleBox.y = textYStart + 20 + textYSpacing;
+  optionTwoToggleBox.y = textYStart  + textYSpacing;
   optionTwoToggleBox.id = 2
    optionTwoToggleBox.touch = onToggleTouch
 optionTwoToggleBox:addEventListener( "touch", optionTwoToggleBox )
@@ -121,7 +133,7 @@ optionTwoToggleBox:addEventListener( "touch", optionTwoToggleBox )
     local optionThreeToggleBox = display.newRect(1510,690,30,30);
   optionThreeToggleBox:setReferencePoint(display.TopLeftReferencePoint);
   optionThreeToggleBox.alpha = minToggleBoxAlpha;
-   optionThreeToggleBox.y = textYStart + 20 + textYSpacing * 2;
+   optionThreeToggleBox.y = textYStart  + textYSpacing * 2;
    optionThreeToggleBox.id = 3
     optionThreeToggleBox.touch = onToggleTouch
 optionThreeToggleBox:addEventListener( "touch", optionThreeToggleBox )
@@ -135,10 +147,52 @@ optionThreeToggleBox:addEventListener( "touch", optionThreeToggleBox )
     local optionFourToggleBox = display.newRect(1510,710,30,30);
   optionFourToggleBox:setReferencePoint(display.TopLeftReferencePoint);
   optionFourToggleBox.alpha = minToggleBoxAlpha;
-  optionFourToggleBox.y = textYStart + 20 + textYSpacing * 3;
+  optionFourToggleBox.y = textYStart  + textYSpacing * 3;
   optionFourToggleBox.id = 4;
    optionFourToggleBox.touch = onToggleTouch
 optionFourToggleBox:addEventListener( "touch", optionFourToggleBox )
+
+local optionFullscreen = display.newText("Fullscreen Mode", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
+optionFullscreen:setReferencePoint(display.TopLeftReferencePoint);
+optionFullscreen.alpha = minTextAlpha;
+ optionFullscreen.x = textXStart;
+optionFullscreen.y = textYStart + textYSpacing * 4;
+
+  local optionFiveToggleBox = display.newRect(1510,730,30,30);
+optionFiveToggleBox:setReferencePoint(display.TopLeftReferencePoint);
+optionFiveToggleBox.alpha = 1.0;
+optionFiveToggleBox.y = textYStart  + textYSpacing * 4;
+optionFiveToggleBox.id = 5;
+ optionFiveToggleBox.touch = onToggleTouch
+optionFiveToggleBox:addEventListener( "touch", optionFiveToggleBox )
+
+local optionMonochomeMode = display.newText("Monochrome Mode", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
+optionMonochomeMode:setReferencePoint(display.TopLeftReferencePoint);
+optionMonochomeMode.alpha = minTextAlpha;
+ optionMonochomeMode.x = textXStart;
+optionMonochomeMode.y = textYStart + textYSpacing * 5;
+
+  local optionSixToggleBox = display.newRect(1510,730,30,30);
+optionSixToggleBox:setReferencePoint(display.TopLeftReferencePoint);
+optionSixToggleBox.alpha = minToggleBoxAlpha;
+optionSixToggleBox.y = textYStart  + textYSpacing * 5;
+optionSixToggleBox.id = 6;
+ optionSixToggleBox.touch = onToggleTouch
+optionSixToggleBox:addEventListener( "touch", optionSixToggleBox )
+
+local optionSleepTimer = display.newText("Sleep Timer (App shuts off after 1 hour of inactivity)", 1450, 650, "Knockout-HTF29-JuniorLiteweight", 40)
+optionSleepTimer:setReferencePoint(display.TopLeftReferencePoint);
+optionSleepTimer.alpha = minTextAlpha;
+ optionSleepTimer.x = textXStart;
+optionSleepTimer.y = textYStart + textYSpacing * 6;
+
+  local optionSevenToggleBox = display.newRect(1510,750,30,30);
+optionSevenToggleBox:setReferencePoint(display.TopLeftReferencePoint);
+optionSevenToggleBox.alpha = minToggleBoxAlpha;
+optionSevenToggleBox.y = textYStart  + textYSpacing * 6;
+optionSevenToggleBox.id = 7;
+ optionSevenToggleBox.touch = onToggleTouch
+optionSevenToggleBox:addEventListener( "touch", optionSevenToggleBox )
 
   optionsMenu:insert(optionClockText)
   optionsMenu:insert(optionClockToggleBox)
@@ -148,12 +202,21 @@ optionFourToggleBox:addEventListener( "touch", optionFourToggleBox )
   optionsMenu:insert(optionThreeToggleBox)
   optionsMenu:insert(optionExtraThunderText)
   optionsMenu:insert(optionFourToggleBox)
+  optionsMenu:insert(optionFullscreen)
+  optionsMenu:insert(optionFiveToggleBox)
+  optionsMenu:insert(optionMonochomeMode)
+  optionsMenu:insert(optionSixToggleBox)
+  optionsMenu:insert(optionSleepTimer)
+  optionsMenu:insert(optionSevenToggleBox)
   
   optionsMenu.options = {
   {text = optionClockText, toggle = "off", toggleBox = optionClockToggleBox},
   {text = optionWanderText, toggle = "off", toggleBox = optionTwoToggleBox},
   {text = optionAutoDimText, toggle = "off", toggleBox = optionThreeToggleBox},
   {text = optionExtraThunderText, toggle = "off", toggleBox = optionFourToggleBox},
+  {text = optionFullscreen, toggle = "on", toggleBox = optionFiveToggleBox},
+  {text = optionMonochomeMode, toggle = "off", toggleBox = optionSixToggleBox},
+  {text = optionSleepTimer, toggle = "off", toggleBox = optionSevenToggleBox},
 
 }
   function optionsMenu:activate()

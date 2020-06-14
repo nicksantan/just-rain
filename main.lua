@@ -128,6 +128,9 @@ local function ouyaListener( event )
       updateLastInteractionTime();
       print("deactivating")
     end
+    if event.buttonName == "quit" and event.phase == "pressed" then
+      native.requestExit();
+    end
      if event.buttonName == "back" and event.phase == "pressed" then
       optionsMenuScreen:deactivate();
       updateLastInteractionTime();
@@ -157,6 +160,9 @@ local function ouyaListener( event )
 
 
   else
+    if event.buttonName == "quit" and event.phase == "pressed" then
+      native.requestExit();
+    end
     if event.buttonName == "menu" and event.phase == "pressed" then
      
       optionsMenuScreen:activate();
@@ -348,6 +354,31 @@ local function manageAutoDim()
 
 end
 
+local function manageSleepTimer()
+  
+  -- print(timeSinceLastInteraction)
+
+  if (optionsMenuScreen.options[7].toggle == "on" and sleepTimerWasOff) then
+    sleepTimerWasOff = false;
+    timeSleepTimerSet = os.time();
+  end
+
+  if (optionsMenuScreen.options[6].toggle == "on") then 
+      print(os.time() - timeSleepTimerSet)
+    local timeSinceSleepTimerSet = os.time() - timeSleepTimerSet;
+    if (timeSinceSleepTimerSet > 60*60) then
+    -- googleAnalytics.logEvent( "appAction", "sleep timer quit")
+    native.requestExit()
+
+    end
+  end
+
+ if (optionsMenuScreen.options[6].toggle == "off") then
+  sleepTimerWasOff = true;
+end
+
+end
+
 local function manageExtraThunder()
 
   if (optionsMenuScreen.options[4].toggle == "on") then
@@ -374,6 +405,22 @@ if (thunderFrameCount % 300 == 0) then
  end
 end
 end
+
+local function manageMonochromeMode()
+  if (optionsMenuScreen.options[6].toggle == "on") then
+            BG.fill.effect = "filter.grayscale"
+          overlay1.fill.effect = "filter.grayscale"
+          overlay2.fill.effect = "filter.grayscale"
+          overlay3.fill.effect = "filter.grayscale"
+
+        else
+  BG.fill.effect = ""
+          overlay1.fill.effect = ""
+          overlay2.fill.effect = ""
+          overlay3.fill.effect = ""
+        end
+  end
+
 local function manageWanderMode()
 
   if (optionsMenuScreen.options[2].toggle == "on") then
@@ -431,6 +478,7 @@ theBox.x = theBox.x + ouyaXVelocity;
 theBox.y = theBox.y + ouyaYVelocity;
 
   manageWanderMode();
+  manageMonochromeMode();
 if (theBox.x >= w) then
   theBox.x = w;
 end
@@ -609,7 +657,7 @@ local function memCheck()
     --create the clock
     theClock = Clock.new();
 
-     titleScreen = display.newImageRect("title.png",1500,800);
+    titleScreen = display.newImage("title-trimmed.png");
     titleScreen:setReferencePoint(display.CenterReferencePoint);
     titleScreen.x = w/2;
     -- titleScreen.x = 2;
@@ -621,10 +669,15 @@ local function memCheck()
     -- create the menu options
     settingsPrompt = display.newGroup();
     settingsPrompt.alpha = 0;
-    local menuIcon = display.newImage("m-key.png",150,900)
+    local menuIcon = display.newImage("m@2x.png",150,900)
     local menuText = display.newText("MENU", 200, 899, "Knockout-HTF29-JuniorLiteweight", 40)
+
+    local quitIcon = display.newImage("q@2x.png",1920 - 300,900)
+    local quitText = display.newText("QUIT", 1920 - 250, 899, "Knockout-HTF29-JuniorLiteweight", 40)
     settingsPrompt:insert(menuIcon);
     settingsPrompt:insert(menuText);
+    settingsPrompt:insert(quitIcon);
+    settingsPrompt:insert(quitText);
     transition.to(settingsPrompt,{time=1000, delay=1000, alpha=1.0});
     transition.to(settingsPrompt,{time=1000, delay=8000, alpha=0.0});
     optionsMenuScreen = OptionsMenu.new();

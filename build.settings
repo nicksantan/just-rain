@@ -43,6 +43,12 @@ settings =
            
         },
          window = {
+            titleText = {
+            -- The "default" text will be used if the system is using a language and/or
+            -- country code not defined below. This serves as a fallback mechanism.
+            default = "Just Rain"
+            },
             defaultMode = "fullscreen",
+            
         },
 }
