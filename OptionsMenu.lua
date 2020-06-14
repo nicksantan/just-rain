@@ -56,7 +56,7 @@ local function onToggleTouch(self, event)
       end
       
       if (self.id == 5) then
-        native.setProperty( "windowMode", "fullScreen" )
+        native.setProperty( "windowMode", "fullscreen" )
       end
 
       optionsMenu.options[self.id].toggle = "on"
